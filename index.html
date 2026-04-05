@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE ARCHITECT v16.0</title>
+    <title>NO:48 | THE SOURCE v17.0</title>
     <style>
         :root {
             --gold: #d4af37; --sky: #00d2ff; --red: #ff4d4d; --green: #4ade80; --purple: #a855f7;
@@ -12,63 +12,82 @@
         [data-theme="light"] {
             --bg: #f3f4f6; --card: #ffffff; --text: #111827; --border: #d1d5db; --nav: #ffffff;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; transition: 0.2s; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', system-ui, sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .logo-box { width: 45px; height: 45px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); }
-        
-        .panel { display: none; padding: 15px; animation: fadeIn 0.4s ease; }
-        .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        /* Glassmorphism Header */
+        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
+        .logo-box { width: 50px; height: 50px; margin: 0 auto; filter: drop-shadow(0 0 10px var(--gold)); cursor: pointer; }
+        .aura-banner { font-size: 10px; background: rgba(0,210,255,0.1); color: var(--sky); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--sky); display: inline-block; margin-top: 8px; font-weight: 900; }
 
-        .card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid var(--border); margin-bottom: 12px; position: relative; }
+        .panel { display: none; padding: 15px; animation: slideIn 0.4s ease; }
+        .panel.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dashboard Cards */
+        .card { background: var(--card); border-radius: 22px; padding: 18px; border: 1px solid var(--border); margin-bottom: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--gold); }
         .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; }
         .val { font-size: 20px; font-weight: 900; margin-top: 8px; }
 
-        /* Multi-Mola System */
+        /* Mola System */
         .staff-card { border-left: 5px solid var(--gold); }
-        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; }
-        .m-btn { padding: 11px; border: none; border-radius: 10px; font-size: 9px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
-        .b-yem { background: var(--gold); } .b-m1 { background: var(--sky); } .b-m2 { background: var(--purple); color:#fff; } .b-sig { background: var(--green); }
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+        .m-btn { padding: 12px; border: none; border-radius: 12px; font-size: 9px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
+        .b-yem { background: var(--gold); } .b-m1 { background: var(--sky); } .b-m2 { background: var(--purple); color: #fff; } .b-sig { background: var(--green); }
         .b-pause { background: #374151; color: #fff; } .b-stop { background: var(--red); color: #fff; grid-column: span 2; }
-        .timer-val { font-family: monospace; font-size: 24px; color: var(--sky); margin: 8px 0; font-weight: bold; }
+        .timer-view { font-family: 'Courier New', monospace; font-size: 22px; color: var(--sky); font-weight: bold; margin: 10px 0; }
 
-        /* Nav & UI */
+        /* Log Box */
+        .log-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 12px; font-size: 11px; height: 150px; overflow-y: auto; border: 1px solid var(--border); line-height: 1.6; }
+        .log-line { border-bottom: 1px solid #222; padding: 4px 0; display: flex; gap: 8px; }
+        .log-t { color: var(--gold); font-weight: bold; }
+
+        /* Nav Bar */
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); display: flex; overflow-x: auto; padding: 12px 5px; border-top: 1px solid var(--border); z-index: 2000; scrollbar-width: none; }
         .nav-item { min-width: 70px; text-align: center; color: #4b5563; font-size: 9px; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--gold); font-weight: 900; }
-        .nav-item i { display: block; font-size: 18px; margin-bottom: 3px; font-style: normal; }
+        .nav-item.active { color: var(--gold); transform: translateY(-3px); font-weight: bold; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; font-style: normal; }
 
-        input, select { width: 100%; padding: 12px; margin: 5px 0; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 10px; font-size: 13px; }
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
-        .log-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 12px; font-size: 11px; height: 160px; overflow-y: auto; border: 1px solid var(--border); }
+        input, select { width: 100%; padding: 14px; margin: 6px 0; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 12px; font-size: 14px; }
+        .btn-pro { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
+        iframe { width: 100%; height: 500px; border-radius: 20px; border: none; background: #fff; }
+
+        /* PIN Overlay */
+        #pin-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; }
     </style>
 </head>
 <body onload="init()">
 
+    <div id="pin-overlay">
+        <h2 style="color:var(--gold)">🔱 TANRI GİRİŞİ</h2>
+        <input type="password" id="pin-input" style="width:200px; text-align:center; font-size:24px; letter-spacing:10px;" placeholder="****">
+        <button class="btn-pro" style="width:200px; margin-top:15px;" onclick="checkPin()">GİRİŞ YAP</button>
+    </div>
+
     <header class="header">
-        <div class="logo-box">
+        <div class="logo-box" onclick="location.reload()">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8"/><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="5" fill="none"/></svg>
         </div>
-        <h1 id="app-title" style="margin: 5px 0; font-size: 16px; letter-spacing: 2px;">NO:48 ARCHITECT</h1>
+        <h1 id="app-title" style="margin: 5px 0; font-size: 16px; letter-spacing: 2px;">NO:48 THE SOURCE</h1>
+        <div class="aura-banner" id="aura-chat">AURA: Hasan, İmparatorluk Emrinde.</div>
     </header>
 
     <div id="p-dash" class="panel active">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="card"><h3>Kasa</h3><div class="val" id="d-bal">0 ₺</div></div>
-            <div class="card"><h3>Ekip</h3><div class="val" id="d-mola">0 / 0</div></div>
-            <div class="card"><h3>GBP/TL</h3><div class="val" id="d-gbp">0 ₺</div></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="card"><h3>Kalan Kasa</h3><div class="val" id="d-bal">0 ₺</div></div>
+            <div class="card"><h3>Mola</h3><div class="val" id="d-mola">0 / 13</div></div>
+            <div class="card" style="border-color:var(--green)"><h3>GBP/TL</h3><div class="val" id="d-gbp">0 ₺</div></div>
             <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
         </div>
         <div class="card">
-            <h3>Canlı Log</h3>
+            <h3>Günlük Operasyon Kaydı</h3>
             <div id="dash-logs" class="log-box"></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Ekip Yönetimi</h2>
+        <h2 style="color:var(--gold)">💼 Mağaza Komuta</h2>
         <div id="staff-container"></div>
     </div>
 
@@ -76,137 +95,149 @@
         <h2 style="color:var(--gold)">🛰️ Marmaris Radar</h2>
         <div class="card" style="border-left:5px solid var(--sky)">
             <h3>Gemi Takvimi</h3>
-            <p id="radar-ships">20 Nisan: AIDAstella<br>28 Nisan: MSC Divina</p>
+            <p>🚢 20 Nisan: AIDAstella<br>🚢 28 Nisan: MSC Divina (4.000 Kişi)</p>
         </div>
         <div class="card">
-            <h3>Hava & Sağlık</h3>
-            <p>Marmaris: 19°C ☀️ | Sultan Eczanesi</p>
+            <h3>Hava & Eczane</h3>
+            <p>18°C Parçalı Bulutlu<br>Nöbetçi: Sultan Eczanesi</p>
         </div>
     </div>
 
     <div id="p-odds" class="panel">
         <h2 style="color:var(--red)">⚽ Stadium</h2>
-        <iframe src="https://m.flashscore.com.tr/" style="width:100%; height:500px; border-radius:15px;"></iframe>
+        <iframe src="https://m.flashscore.com.tr/"></iframe>
     </div>
 
     <div id="p-bank" class="panel">
-        <h2 style="color:var(--green)">💰 Banker</h2>
-        <div class="card"><h3>Toplam Net</h3><div id="b-bal" class="val">0 ₺</div></div>
+        <h2 style="color:var(--green)">💰 Banker & Dövizmatik</h2>
+        <div class="card" style="background:linear-gradient(45deg, #111827, #1e293b)">
+            <h3>Hesap Makinesi (Girdiğin Kurla)</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="number" id="calc-val" placeholder="Döviz" oninput="calcExchange()">
+                <select id="calc-type" onchange="calcExchange()"><option value="gbp">GBP (£)</option><option value="eur">EUR (€)</option><option value="usd">USD ($)</option></select>
+            </div>
+            <div id="calc-res" style="font-size:24px; font-weight:900; color:var(--green); margin-top:10px;">0.00 ₺</div>
+        </div>
         <div id="exp-list"></div>
         <div class="card">
-            <input type="text" id="e-n" placeholder="İşlem Adı">
+            <input type="text" id="e-n" placeholder="Açıklama">
             <input type="number" id="e-a" placeholder="Tutar (₺)">
             <select id="e-t"><option value="rev">Ciro (+)</option><option value="exp">Gider (-)</option></select>
-            <button class="btn-action" onclick="addMoney()">KASAYA İŞLE</button>
+            <button class="btn-pro" onclick="addMoney()">KASAYA İŞLE</button>
         </div>
     </div>
 
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div id="begum-list"></div>
-        <input type="text" id="b-note" placeholder="Not...">
-        <button class="btn-action" style="background:var(--sky)" onclick="addBegum()">KAYDET</button>
+        <input type="text" id="b-note" placeholder="Ona not bırak...">
+        <button class="btn-pro" style="background:var(--sky)" onclick="addBegum()">KAYDET</button>
     </div>
 
     <div id="p-god" class="panel">
-        <h2 style="color:var(--gold)">⚡ God Mode: Architecht</h2>
+        <h2 style="color:var(--gold)">⚡ Tanrı Modu: The Source</h2>
         <div class="card">
-            <h3>Panel Yönetimi</h3>
-            <div id="panel-controls" style="font-size:12px; display:grid; grid-template-columns:1fr 1fr; gap:5px;"></div>
+            <h3>Panel Görünümü</h3>
+            <div id="panel-ctrl" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;"></div>
         </div>
         <div class="card">
-            <h3>2026 Kur Girişi (₺)</h3>
+            <h3>2026 Kur Ayarları (₺)</h3>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px;">
                 <input type="number" id="k-gbp" placeholder="GBP">
                 <input type="number" id="k-eur" placeholder="EUR">
                 <input type="number" id="k-usd" placeholder="USD">
             </div>
-            <button class="btn-action" onclick="saveKurlar()">KURLARI GÜNCELLE</button>
+            <button class="btn-pro" style="margin-top:10px;" onclick="saveKurlar()">KURU MÜHÜRLE</button>
         </div>
         <div class="card">
-            <input type="text" id="p-new" placeholder="Personel Adı">
-            <button class="btn-action" style="background:var(--sky)" onclick="addStaff()">EKİBE KAT</button>
+            <h3>AURA Kişiliği</h3>
+            <select id="a-mood" onchange="saveMood()"><option value="esnaf">Esnaf Hasan</option><option value="patron">Sert Patron</option><option value="begum">Begüm Aşığı</option></select>
         </div>
         <div class="card">
-            <input type="number" id="g-sal" placeholder="Maaş Girişi">
-            <button class="btn-action" onclick="saveSal()">MAAŞI GÜNCELLE</button>
+            <h3>Personel Yarat</h3>
+            <input type="text" id="p-new" placeholder="Ad Soyad">
+            <button class="btn-pro" style="background:var(--sky)" onclick="addStaff()">EKİBE KAT</button>
         </div>
+        <div class="card">
+            <input type="password" id="set-pin" placeholder="Yeni PIN Belirle">
+            <button class="btn-pro" style="background:var(--red); color:#fff;" onclick="savePin()">ŞİFREYİ KAYDET</button>
+        </div>
+        <button class="btn-pro" style="background:#444; color:#fff; margin-top:10px;" onclick="wipe()">SİSTEMİ SIFIRLA</button>
     </div>
 
     <nav class="nav-bar" id="nav-container"></nav>
 
     <script>
-        const DB_KEY = 'NO48_ARCHITECT_STABLE';
+        const DB_KEY = 'NO48_THE_SOURCE_STABLE';
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            name: "NO:48", salary: 52000, staff: [], expenses: [], revenue: [], begum: [], logs: [], theme: 'dark',
-            kurlar: {gbp:50.2, eur:44.5, usd:38.8},
+            name: "NO:48", salary: 52000, pin: "1234", theme: 'dark', mood: 'esnaf',
+            staff: [], expenses: [], revenue: [], begum: [], logs: [],
+            kurlar: {gbp:51.5, eur:44.2, usd:38.5},
             panels: {dash:true, store:true, radar:true, odds:true, bank:true, begum:true, god:true}
         };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
         
-        function init() {
-            render();
-            setInterval(render, 1000);
-        }
+        function init() { render(); setInterval(render, 1000); }
 
         function nav(id, el) {
+            if(id === 'p-god') { document.getElementById('pin-overlay').style.display = 'flex'; return; }
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
         }
 
+        function checkPin() {
+            if(document.getElementById('pin-input').value === db.pin) {
+                document.getElementById('pin-overlay').style.display = 'none';
+                document.getElementById('pin-input').value = '';
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('p-god').classList.add('active');
+            } else { alert("YETKİSİZ GİRİŞ!"); }
+        }
+
         function log(msg) {
             const time = new Date().toLocaleTimeString('tr-TR');
-            db.logs.unshift({time, msg});
-            if(db.logs.length > 40) db.logs.pop();
+            db.logs.unshift({time, msg}); if(db.logs.length > 50) db.logs.pop();
             save();
         }
 
-        // Mola Motoru
+        // Mola Motoru v3.0 (Durdur/Devam/Bitir)
         function startMola(idx, type, mins) {
-            let s = db.staff[idx];
-            if(s.active) return alert("Zaten molada!");
+            let s = db.staff[idx]; if(s.active) return alert("Zaten molada!");
             s.active = { type, start: Date.now(), totalPaused: 0, limit: mins * 60000, status: 'running' };
             log(`${s.name} - ${type} Başladı`);
         }
         function togglePause(idx) {
             let s = db.staff[idx].active; if(!s) return;
-            if(s.status === 'running') { s.status = 'paused'; s.lastPausedAt = Date.now(); log(`${db.staff[idx].name} Duraklatıldı`); }
+            if(s.status === 'running') { s.status = 'paused'; s.lastPausedAt = Date.now(); log(`${db.staff[idx].name} Durduruldu`); }
             else { s.status = 'running'; s.totalPaused += (Date.now() - s.lastPausedAt); log(`${db.staff[idx].name} Devam Ediyor`); }
             save();
         }
         function stopMola(idx) {
             let s = db.staff[idx]; if(!s.active) return;
-            log(`${s.name} ${s.active.type} BİTTİ`);
-            s.active = null; save();
+            log(`${s.name} ${s.active.type} BİTTİ`); s.active = null; save();
         }
 
         function render() {
-            // Clock
             document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-            
-            // Finans
             let exp = db.expenses.reduce((a,b) => a+b.amt, 0);
             let rev = db.revenue.reduce((a,b) => a+b.amt, 0);
             let total = db.salary + rev - exp;
             document.getElementById('d-bal').innerText = total.toLocaleString() + " ₺";
-            document.getElementById('b-bal').innerText = total.toLocaleString() + " ₺";
             document.getElementById('d-gbp').innerText = db.kurlar.gbp + " ₺";
 
-            // Panels & Nav
-            let navHtml = '';
-            let pControlHtml = '';
+            // Nav & Panel Ctrl
+            let navH = ''; let ctrlH = '';
             const icons = {dash:'🏠', store:'💼', radar:'🛰️', odds:'⚽', bank:'💰', begum:'💎', god:'⚡'};
-            const labels = {dash:'Dash', store:'Mola', radar:'Radar', odds:'Maç', bank:'Banka', begum:'Begüm', god:'Tanrı'};
-            
+            const labs = {dash:'Dash', store:'Mola', radar:'Radar', odds:'Maç', bank:'Banka', begum:'Begüm', god:'Tanrı'};
             for(let p in db.panels) {
-                if(db.panels[p]) navHtml += `<div class="nav-item ${document.getElementById('p-'+p).classList.contains('active')?'active':''}" onclick="nav('p-${p}', this)"><i>${icons[p]}</i>${labels[p]}</div>`;
-                pControlHtml += `<div><input type="checkbox" ${db.panels[p]?'checked':''} onchange="togglePanel('${p}')"> ${labels[p]}</div>`;
+                if(db.panels[p]) navH += `<div class="nav-item ${document.getElementById('p-'+p).classList.contains('active')?'active':''}" onclick="nav('p-${p}', this)"><i>${icons[p]}</i>${labs[p]}</div>`;
+                ctrlH += `<div><input type="checkbox" ${db.panels[p]?'checked':''} onchange="togglePanel('${p}')"> ${labs[p]}</div>`;
             }
-            document.getElementById('nav-container').innerHTML = navHtml;
-            document.getElementById('panel-controls').innerHTML = pControlHtml;
+            document.getElementById('nav-container').innerHTML = navH;
+            document.getElementById('panel-ctrl').innerHTML = ctrlH;
 
             // Staff
             let onMola = 0;
@@ -224,10 +255,9 @@
                         let m = Math.floor(elapsed/60000); let sec = Math.floor((elapsed%60000)/1000);
                         display = `${m}:${sec<10?'0':''}${sec}`;
                     }
-                    timer = `<div class="timer-val">${s.active.type}: ${display} ${s.active.status==='paused'?'(DURDU)':''}</div>`;
+                    timer = `<div class="timer-view" style="color:${s.active.status==='paused'?'var(--gold)':''}">${s.active.type}: ${display}</div>`;
                 }
-                return `
-                <div class="card staff-card">
+                return `<div class="card staff-card">
                     <b>${s.name}</b> <span onclick="delSt(${i})" style="float:right; color:red; font-size:9px;">SİL</span>
                     ${timer}
                     <div class="btn-grid">
@@ -235,36 +265,43 @@
                         <button class="m-btn b-m1" onclick="startMola(${i},'Mola 1',30)">Mola 1</button>
                         <button class="m-btn b-m2" onclick="startMola(${i},'Mola 2',30)">Mola 2</button>
                         <button class="m-btn b-sig" onclick="startMola(${i},'Sigara',0)">Sigara</button>
-                        ${s.active ? `<button class="m-btn b-pause" onclick="togglePause(${i})">${s.active.status==='paused'?'DEVAM':'DURAKLAT'}</button>` : ''}
+                        ${s.active ? `<button class="m-btn b-pause" onclick="togglePause(${i})">${s.active.status==='paused'?'DEVAM':'DURDUR'}</button>` : ''}
                         ${s.active ? `<button class="m-btn b-stop" onclick="stopMola(${i})">BİTİR</button>` : ''}
                     </div>
                 </div>`;
             }).join('');
             document.getElementById('d-mola').innerText = `${onMola} / ${db.staff.length}`;
 
-            // Logs & Lists
-            document.getElementById('dash-logs').innerHTML = db.logs.map(l => `<div><span style="color:var(--gold)">${l.time}</span> ${l.msg}</div>`).join('');
-            document.getElementById('exp-list').innerHTML = [...db.revenue, ...db.expenses].map((e,i) => `<div class="card" style="font-size:11px;">${e.name}: ${e.amt} ₺</div>`).join('');
+            // Lists
+            document.getElementById('dash-logs').innerHTML = db.logs.map(l => `<div class="log-line"><span class="log-t">${l.time}</span> ${l.msg}</div>`).join('');
+            document.getElementById('exp-list').innerHTML = [...db.revenue, ...db.expenses].reverse().map((e,i) => `<div class="card" style="font-size:11px;">${e.name}: ${e.amt} ₺</div>`).join('');
             document.getElementById('begum-list').innerHTML = db.begum.map((n,i) => `<div class="card" style="border-left:3px solid var(--sky)">${n} <span onclick="delBeg(${i})" style="float:right">✓</span></div>`).join('');
         }
 
-        // God Mode Functions
+        // God Functions
         function togglePanel(p) { db.panels[p] = !db.panels[p]; save(); }
         function saveKurlar() {
             db.kurlar.gbp = document.getElementById('k-gbp').value || db.kurlar.gbp;
             db.kurlar.eur = document.getElementById('k-eur').value || db.kurlar.eur;
             db.kurlar.usd = document.getElementById('k-usd').value || db.kurlar.usd;
-            save(); alert("Kurlar güncellendi.");
+            save(); alert("2026 Kurları mühürlendi.");
         }
+        function calcExchange() {
+            let v = document.getElementById('calc-val').value;
+            let t = document.getElementById('calc-type').value;
+            document.getElementById('calc-res').innerText = (v * db.kurlar[t]).toLocaleString() + " ₺";
+        }
+        function savePin() { let p = document.getElementById('set-pin').value; if(p){db.pin = p; save(); alert("Yeni PIN aktif!");} }
+        function saveMood() { db.mood = document.getElementById('a-mood').value; save(); log(`AURA Kişiliği: ${db.mood}`); }
         function addMoney() {
             let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value;
             if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); document.getElementById('e-n').value=''; document.getElementById('e-a').value=''; }
         }
         function addStaff() { let n = document.getElementById('p-new').value; if(n){db.staff.push({name:n, active:null}); save(); document.getElementById('p-new').value='';} }
-        function saveSal() { db.salary = Number(document.getElementById('g-sal').value) || db.salary; save(); }
         function addBegum() { let n = document.getElementById('b-note').value; if(n){db.begum.push(n); save(); document.getElementById('b-note').value='';} }
         function delSt(i) { db.staff.splice(i,1); save(); }
         function delBeg(i) { db.begum.splice(i,1); save(); }
+        function wipe() { if(confirm("Kıyamet başlasın mı? Tüm veriler silinecek!")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
