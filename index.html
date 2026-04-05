@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE COMMANDER v12.0</title>
+    <title>NO:48 | THE FINAL BEAST v13.0</title>
     <style>
         :root {
             --gold: #d4af37; --sky: #00d2ff; --red: #ff4d4d; --green: #4ade80;
@@ -12,105 +12,130 @@
         [data-theme="light"] {
             --bg: #f3f4f6; --card: #ffffff; --text: #111827; --border: #e5e7eb; --nav: #ffffff;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); sticky; top: 0; z-index: 100; }
-        .logo-box { width: 50px; height: 50px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); }
+        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); sticky; top: 0; z-index: 1000; }
+        .logo-box { width: 45px; height: 45px; margin: 0 auto; filter: drop-shadow(0 0 5px var(--gold)); }
         
-        .panel { display: none; padding: 15px; animation: slideUp 0.4s ease; }
+        .panel { display: none; padding: 15px; animation: slideUp 0.3s ease; }
         .panel.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: var(--card); border-radius: 18px; padding: 15px; border: 1px solid var(--border); margin-bottom: 12px; }
+        .card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; position: relative; }
+        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Mola Kontrol Ünitesi */
+        .staff-card { border-left: 4px solid var(--gold); margin-bottom: 12px; }
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; }
+        .m-btn { padding: 10px; border: none; border-radius: 8px; font-size: 9px; font-weight: 800; cursor: pointer; color: #000; text-transform: uppercase; }
+        .b-yemek { background: var(--gold); } .b-mola { background: var(--sky); } .b-sigara { background: var(--green); } .b-stop { background: var(--red); color: #fff; } .b-pause { background: #555; color: #fff; }
+
+        .timer-val { font-family: monospace; font-size: 20px; color: var(--sky); margin: 8px 0; font-weight: bold; }
         
-        /* Mola Butonları & UI */
-        .staff-card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; border-left: 5px solid var(--gold); }
-        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
-        .m-btn { padding: 8px; border: none; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; color: #000; }
-        .b-yemek { background: var(--gold); }
-        .b-mola { background: var(--sky); }
-        .b-sigara { background: var(--green); }
-        .b-stop { background: var(--red); color: white; grid-column: span 2; }
-        
-        .timer-display { font-family: monospace; font-size: 18px; color: var(--sky); font-weight: bold; margin-top: 5px; }
+        /* Log & Radar UI */
+        .log-box { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; font-size: 11px; height: 180px; overflow-y: auto; border: 1px solid var(--border); }
+        .log-item { padding: 4px 0; border-bottom: 1px solid #222; }
+        .log-time { color: var(--gold); margin-right: 6px; }
 
-        /* Log Sistemi */
-        .log-container { font-size: 11px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; height: 200px; overflow-y: auto; border: 1px solid var(--border); }
-        .log-entry { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #333; }
-        .log-time { color: var(--gold); margin-right: 5px; }
-
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); display: flex; overflow-x: auto; padding: 10px 5px; border-top: 1px solid var(--border); z-index: 1000; scrollbar-width: none; }
-        .nav-item { min-width: 75px; text-align: center; color: #6b7280; font-size: 10px; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); display: flex; overflow-x: auto; padding: 10px 5px; border-top: 1px solid var(--border); z-index: 2000; scrollbar-width: none; }
+        .nav-item { min-width: 65px; text-align: center; color: #6b7280; font-size: 9px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--gold); }
-        .nav-item i { display: block; font-size: 18px; margin-bottom: 4px; font-style: normal; }
+        .nav-item i { display: block; font-size: 18px; margin-bottom: 3px; font-style: normal; }
 
-        input { width: 100%; padding: 12px; margin: 8px 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 10px; }
+        input { width: 100%; padding: 12px; margin: 5px 0; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 10px; }
+        iframe { width: 100%; height: 500px; border-radius: 15px; border: none; background: #fff; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div class="logo-box">
-            <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8" /><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="4" fill="none" /><path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="var(--gold)" /></svg>
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" /><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="4" fill="none" /></svg>
         </div>
-        <div id="aura-status" style="font-size:11px; color:var(--sky); font-weight:bold; margin-top:5px;">AURA: Komuta Merkezi Hazır</div>
+        <div id="aura-status" style="font-size:10px; color:var(--sky); font-weight:900; margin-top:5px;">AURA: İMPARATORLUK MERKEZİ</div>
     </header>
 
     <div id="p-dash" class="panel active">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="card"><h3>Kalan</h3><div id="d-bal" style="font-size:18px; font-weight:800;">0 ₺</div></div>
-            <div class="card"><h3>Molada</h3><div id="d-mola" style="font-size:18px; font-weight:800;">0</div></div>
+            <div class="card"><h3>Kalan Bütçe</h3><div id="d-bal" style="font-size:18px; font-weight:bold;">0 ₺</div></div>
+            <div class="card"><h3>Molada</h3><div id="d-mola" style="font-size:18px; font-weight:bold;">0</div></div>
         </div>
         <div class="card">
-            <h3>Son Hareketler (Logs)</h3>
-            <div id="dash-logs" class="log-container" style="height:150px;"></div>
+            <h3>Canlı Akış (Log)</h3>
+            <div id="dash-logs" class="log-box"></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Mağaza Komuta</h2>
+        <h2 style="color:var(--gold)">💼 Mağaza Operasyon</h2>
         <div id="staff-container"></div>
+    </div>
+
+    <div id="p-radar" class="panel">
+        <h2 style="color:var(--gold)">🛰️ Marmaris Radar</h2>
+        <div class="card" style="border-left:4px solid var(--sky)">
+            <h3>Cruise Takvimi</h3>
+            <p style="font-size:12px;">🚢 20 Nisan: AIDAstella (2.500 Yolcu)</p>
+            <p style="font-size:12px;">🚢 28 Nisan: MSC Divina (4.000 Yolcu)</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--red)">
+            <h3>Nöbetçi Eczane</h3>
+            <p style="font-size:13px; font-weight:bold;">Sultan Eczanesi (0252 412 85 66)</p>
+        </div>
+    </div>
+
+    <div id="p-odds" class="panel">
+        <h2 style="color:var(--red)">⚽ Canlı Skorlar</h2>
+        <iframe src="https://m.flashscore.com.tr/"></iframe>
+    </div>
+
+    <div id="p-bank" class="panel">
+        <h2 style="color:var(--green)">💰 Banker</h2>
+        <div class="card"><h3>Net Bakiye</h3><div id="b-bal" style="font-size:24px; font-weight:bold;">0 ₺</div></div>
+        <div id="exp-list"></div>
+        <div class="card">
+            <input type="text" id="e-n" placeholder="Harcama Adı">
+            <input type="number" id="e-a" placeholder="Tutar (₺)">
+            <button onclick="addExp()" style="width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; font-weight:bold;">İŞLE</button>
+        </div>
     </div>
 
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div id="begum-list"></div>
-        <input type="text" id="b-in" placeholder="Yeni not...">
-        <button onclick="addGen('begum','b-in')" style="width:100%; padding:15px; background:var(--sky); border:none; border-radius:12px; font-weight:bold;">Kaydet</button>
-    </div>
-
-    <div id="p-logs" class="panel">
-        <h2 style="color:var(--gold)">📜 İşlem Geçmişi</h2>
-        <div id="full-logs" class="log-container" style="height:500px;"></div>
-        <button onclick="clearLogs()" style="width:100%; margin-top:10px; background:red; color:white; border:none; padding:10px; border-radius:10px;">Tarihi Sil</button>
+        <input type="text" id="b-note" placeholder="Not yaz...">
+        <button onclick="addBegum()" style="width:100%; padding:10px; background:var(--sky); border:none; border-radius:10px; font-weight:bold;">KAYDET</button>
     </div>
 
     <div id="p-god" class="panel">
         <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
-            <input type="text" id="s-name" placeholder="Sistem Adı">
-            <input type="number" id="s-sal" placeholder="Maaş">
-            <button onclick="setGod()" style="width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px;">Güncelle</button>
+            <input type="text" id="g-name" placeholder="Sistem Adı">
+            <input type="number" id="g-sal" placeholder="Maaş">
+            <button onclick="saveGod()" style="width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px;">GÜNCELLE</button>
         </div>
         <div class="card">
-            <input type="text" id="ns-name" placeholder="Yeni Personel">
-            <button onclick="addSt()" style="width:100%; padding:10px; background:var(--sky); border:none; border-radius:10px;">Ekle</button>
+            <input type="text" id="p-name" placeholder="Personel Adı">
+            <button onclick="addStaff()" style="width:100%; padding:10px; background:var(--sky); border:none; border-radius:10px;">EKİBE KAT</button>
         </div>
+        <button onclick="resetSystem()" style="width:100%; padding:10px; background:red; color:#fff; border:none; border-radius:10px; margin-top:10px;">SİSTEMİ SIFIRLA</button>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active" onclick="nav('p-dash', this)"><i>🏠</i>Dash</div>
         <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Store</div>
+        <div class="nav-item" onclick="nav('p-radar', this)"><i>🛰️</i>Radar</div>
+        <div class="nav-item" onclick="nav('p-odds', this)"><i>⚽</i>Maç</div>
+        <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Bank</div>
         <div class="nav-item" onclick="nav('p-begum', this)"><i>💎</i>Begüm</div>
-        <div class="nav-item" onclick="nav('p-logs', this)"><i>📜</i>Log</div>
         <div class="nav-item" onclick="nav('p-god', this)"><i>⚡</i>Tanrı</div>
     </nav>
 
     <script>
-        const DB_KEY = 'NO48_FINAL_SYSTEM';
+        const DB_KEY = 'NO48_ULTRA_STABLE';
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            name: "NO:48", salary: 52000, staff: [], begum: [], expenses: [], logs: []
+            name: "NO:48", salary: 52000, staff: [], expenses: [], begum: [], logs: []
         };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
@@ -119,97 +144,107 @@
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            el.scrollIntoView({behavior:'smooth', inline:'center'});
         }
 
-        function addLog(msg) {
-            const time = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        function log(msg) {
+            const time = new Date().toLocaleTimeString('tr-TR');
             db.logs.unshift({time, msg});
-            if(db.logs.length > 100) db.logs.pop();
+            if(db.logs.length > 50) db.logs.pop();
             save();
         }
 
-        function startMola(i, type, dur) {
-            let s = db.staff[i];
-            if(s.activeMola) return alert("Zaten molada!");
-            s.activeMola = { type, start: Date.now(), dur: dur * 60 * 1000 };
-            addLog(`${s.name} - ${type} Başladı`);
+        // Mola Motoru
+        function startMola(idx, type, mins) {
+            let s = db.staff[idx];
+            if(s.active) return alert("Zaten molada!");
+            s.active = { type, start: Date.now(), totalPaused: 0, limit: mins * 60000, status: 'running' };
+            log(`${s.name} - ${type} BAŞLADI`);
         }
 
-        function stopMola(i) {
-            let s = db.staff[i];
-            if(!s.activeMola) return;
-            addLog(`${s.name} - ${s.activeMola.type} BİTTİ`);
-            s.activeMola = null;
+        function togglePause(idx) {
+            let s = db.staff[idx].active;
+            if(!s) return;
+            if(s.status === 'running') {
+                s.status = 'paused';
+                s.lastPausedAt = Date.now();
+                log(`${db.staff[idx].name} - MOLA DURDURULDU`);
+            } else {
+                s.status = 'running';
+                s.totalPaused += (Date.now() - s.lastPausedAt);
+                log(`${db.staff[idx].name} - MOLA DEVAM EDİYOR`);
+            }
+            save();
+        }
+
+        function finishMola(idx) {
+            let s = db.staff[idx];
+            if(!s.active) return;
+            log(`${s.name} - ${s.active.type} BİTİRİLDİ`);
+            s.active = null;
+            save();
         }
 
         function render() {
-            // Dash Finans
-            let totalExp = db.expenses.reduce((s, e) => s + e.amt, 0);
-            document.getElementById('d-bal').innerText = (db.salary - totalExp).toLocaleString() + " ₺";
+            // Banker
+            let spent = db.expenses.reduce((a, b) => a + b.amt, 0);
+            let bal = db.salary - spent;
+            document.getElementById('d-bal').innerText = bal.toLocaleString() + " ₺";
+            document.getElementById('b-bal').innerText = bal.toLocaleString() + " ₺";
 
-            // Staff & Timers
-            const now = Date.now();
-            let moladakiler = 0;
+            // Staff
+            let onMola = 0;
             document.getElementById('staff-container').innerHTML = db.staff.map((s, i) => {
-                let timerHtml = '';
-                if(s.activeMola) {
-                    moladakiler++;
-                    let diff = now - s.activeMola.start;
+                let timerUI = '';
+                if(s.active) {
+                    onMola++;
+                    let elapsed = (s.active.status === 'running' ? Date.now() : s.active.lastPausedAt) - s.active.start - s.active.totalPaused;
                     let display = "";
-                    if(s.activeMola.dur > 0) { // Countdown
-                        let rem = s.activeMola.dur - diff;
-                        if(rem < 0) { display = "SÜRE DOLDU!"; }
-                        else {
-                            let m = Math.floor(rem / 60000);
-                            let sec = Math.floor((rem % 60000) / 1000);
-                            display = `Kalan: ${m}:${sec < 10 ? '0' : ''}${sec}`;
-                        }
-                    } else { // Stopwatch
-                        let m = Math.floor(diff / 60000);
-                        let sec = Math.floor((diff % 60000) / 1000);
-                        display = `Geçen: ${m}:${sec < 10 ? '0' : ''}${sec}`;
+                    if(s.active.limit > 0) { // Geri sayım
+                        let rem = s.active.limit - elapsed;
+                        let m = Math.floor(Math.abs(rem)/60000); let sec = Math.floor((Math.abs(rem)%60000)/1000);
+                        display = (rem < 0 ? "-" : "") + `${m}:${sec<10?'0':''}${sec}`;
+                    } else { // Kronometre
+                        let m = Math.floor(elapsed/60000); let sec = Math.floor((elapsed%60000)/1000);
+                        display = `${m}:${sec<10?'0':''}${sec}`;
                     }
-                    timerHtml = `<div class="timer-display">${s.activeMola.type}: ${display}</div>`;
+                    timerUI = `<div class="timer-val" style="color:${s.active.status==='paused'?'#ff9800':''}">${s.active.type}: ${display} ${s.active.status==='paused'?'(DURDU)':''}</div>`;
                 }
-
                 return `
-                <div class="staff-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>${s.name}</b>
-                        <span onclick="removeSt(${i})" style="color:red; font-size:10px;">KALDIR</span>
-                    </div>
-                    ${timerHtml}
-                    <div class="btn-group">
+                <div class="card staff-card">
+                    <div style="display:flex; justify-content:space-between"><b>${s.name}</b><span onclick="delSt(${i})" style="color:red; font-size:9px;">SİL</span></div>
+                    ${timerUI}
+                    <div class="btn-grid">
                         <button class="m-btn b-yemek" onclick="startMola(${i},'Yemek',60)">YEMEK</button>
-                        <button class="m-btn b-mola" onclick="startMola(${i},'1. MOLA',30)">1. MOLA</button>
-                        <button class="m-btn b-mola" onclick="startMola(${i},'2. MOLA',30)">2. MOLA</button>
-                        <button class="m-btn b-sigara" onclick="startMola(${i},'Sigara/Kahve',0)">SİGARA</button>
-                        ${s.activeMola ? `<button class="m-btn b-stop" onclick="stopMola(${i})">MOLAYI BİTİR</button>` : ''}
+                        <button class="m-btn b-mola" onclick="startMola(${i},'Mola',30)">MOLA</button>
+                        <button class="m-btn b-sigara" onclick="startMola(${i},'Sigara',0)">SİGARA</button>
+                        <button class="m-btn b-pause" onclick="togglePause(${i})">${s.active?.status==='paused'?'DEVAM':'DURDUR'}</button>
+                        <button class="m-btn b-stop" style="grid-column: span 2" onclick="finishMola(${i})">MOLAYI BİTİR (LOGLA)</button>
                     </div>
                 </div>`;
             }).join('');
-
-            document.getElementById('d-mola').innerText = moladakiler;
+            document.getElementById('d-mola').innerText = onMola;
 
             // Logs
-            let logHtml = db.logs.map(l => `<div class="log-entry"><span class="log-time">${l.time}</span> ${l.msg}</div>`).join('');
-            document.getElementById('dash-logs').innerHTML = logHtml;
-            document.getElementById('full-logs').innerHTML = logHtml;
+            let lHtml = db.logs.map(l => `<div class="log-item"><span class="log-time">${l.time}</span>${l.msg}</div>`).join('');
+            document.getElementById('dash-logs').innerHTML = lHtml;
 
-            // Begüm
-            document.getElementById('begum-list').innerHTML = db.begum.map((n, i) => `<div class="card" style="padding:10px; border-left:3px solid var(--sky)">${n} <span onclick="remove('begum',${i})" style="float:right">✓</span></div>`).join('');
+            // Finance & Begum
+            document.getElementById('exp-list').innerHTML = db.expenses.map((e,i) => `<div class="card" style="font-size:12px;">${e.name}: ${e.amt} ₺ <span onclick="delExp(${i})" style="float:right; color:red">×</span></div>`).join('');
+            document.getElementById('begum-list').innerHTML = db.begum.map((n,i) => `<div class="card" style="border-left:3px solid var(--sky)">${n}<span onclick="delBeg(${i})" style="float:right">✓</span></div>`).join('');
         }
 
-        // Helpers
-        function setGod() { db.name = document.getElementById('s-name').value || db.name; db.salary = Number(document.getElementById('s-sal').value) || db.salary; save(); }
-        function addSt() { let n = document.getElementById('ns-name').value; if(n){db.staff.push({name:n, activeMola:null}); save(); document.getElementById('ns-name').value='';} }
-        function removeSt(i) { if(confirm("Personeli sil?")) { db.staff.splice(i, 1); save(); } }
-        function remove(k, i) { db[k].splice(i, 1); save(); }
-        function addGen(k, id) { let v = document.getElementById(id).value; if(v){db[k].push(v); save(); document.getElementById(id).value='';} }
-        function clearLogs() { if(confirm("Tüm geçmiş silinecek?")) { db.logs = []; save(); } }
+        // Global Actions
+        function addStaff() { let n = document.getElementById('p-name').value; if(n){db.staff.push({name:n, active:null}); save(); document.getElementById('p-name').value='';} }
+        function addExp() { let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); if(n && a){db.expenses.push({name:n, amt:a}); save(); document.getElementById('e-n').value=''; document.getElementById('e-a').value='';} }
+        function addBegum() { let n = document.getElementById('b-note').value; if(n){db.begum.push(n); save(); document.getElementById('b-note').value='';} }
+        function saveGod() { db.name = document.getElementById('g-name').value || db.name; db.salary = Number(document.getElementById('g-sal').value) || db.salary; save(); }
+        function delSt(i) { db.staff.splice(i,1); save(); }
+        function delExp(i) { db.expenses.splice(i,1); save(); }
+        function delBeg(i) { db.begum.splice(i,1); save(); }
+        function resetSystem() { if(confirm("Her şey silinecek?")) { localStorage.clear(); location.reload(); } }
 
-        setInterval(render, 1000); // Saniyelik sayaç güncelleme
+        setInterval(render, 1000);
         render();
     </script>
 </body>
