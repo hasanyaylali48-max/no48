@@ -1,137 +1,138 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | SUPREME CORE v32.0</title>
+    <title>NO:48 | SINGULARITY v34.0</title>
     <style>
         :root {
-            --gold: #d4af37; --gold-glow: rgba(212, 175, 55, 0.4);
-            --sky: #00d2ff; --sky-glow: rgba(0, 210, 255, 0.4);
-            --red: #ff4d4d; --green: #4ade80; --purple: #a855f7; --pink: #ff69b4;
-            --bg: #030508; --card: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1);
-            --nav: rgba(10, 15, 25, 0.98);
+            --gold: #d4af37; --gold-glw: rgba(212,175,55,0.4);
+            --sky: #00d2ff; --sky-glw: rgba(0,210,255,0.4);
+            --pink: #ff69b4; --red: #ff4d4d; --green: #4ade80; --purple: #a855f7;
+            --bg: #030508; --card: rgba(255,255,255,0.06); --border: rgba(255,255,255,0.1);
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', system-ui, sans-serif; transition: 0.3s; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; transition: 0.3s; }
         body { background: radial-gradient(circle at top right, #1a1a1a, var(--bg)); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; min-height: 100vh; }
         
-        .header { text-align: center; padding: 20px; border-bottom: 1px solid var(--border); background: rgba(10, 15, 25, 0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; }
-        .logo-box svg { width: 45px; height: 45px; filter: drop-shadow(0 0 10px var(--gold)); cursor: pointer; }
-        
-        .panel { display: none; padding: 15px; animation: panelIn 0.4s ease; }
+        .header { text-align: center; padding: 25px 20px; border-bottom: 1px solid var(--border); background: rgba(10,15,25,0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; }
+        .aura-ai-badge { font-size: 10px; background: var(--purple); color: #fff; padding: 6px 16px; border-radius: 30px; display: inline-block; margin-top: 10px; font-weight: 900; letter-spacing: 2px; box-shadow: 0 0 15px var(--purple); }
+
+        .panel { display: none; padding: 20px; animation: panelIn 0.5s ease; }
         .panel.active { display: block; }
-        @keyframes panelIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes panelIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        .card { background: var(--card); backdrop-filter: blur(15px); border-radius: 24px; padding: 18px; border: 1px solid var(--border); margin-bottom: 12px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+        .card { background: var(--card); backdrop-filter: blur(15px); border-radius: 26px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
-        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; }
-        .val { font-size: 22px; font-weight: 900; margin-top: 8px; }
+        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
+        .val { font-size: 24px; font-weight: 900; margin-top: 8px; }
 
-        /* Progress Bar */
-        .progress-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-top: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--green); box-shadow: 0 0 10px var(--green); width: 0%; }
-
-        /* Mola & Ekip */
-        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
-        .m-btn { padding: 12px; border: none; border-radius: 14px; font-size: 10px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
+        /* Mola System */
+        .staff-card { border-left: none; }
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
+        .m-btn { padding: 12px; border: none; border-radius: 14px; font-size: 9px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
         .b-yem { background: var(--gold); } .b-m1 { background: var(--sky); } .b-m2 { background: var(--purple); color: #fff; } .b-sig { background: var(--green); }
         .b-stop { background: var(--red); color: #fff; grid-column: span 2; }
-        .timer-view { font-family: monospace; font-size: 26px; color: var(--sky); font-weight: bold; margin: 10px 0; text-align: center; }
+        .timer-view { font-family: monospace; font-size: 28px; color: var(--sky); font-weight: bold; margin: 10px 0; text-align: center; }
 
-        /* Navigation - FIXED */
-        .nav-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: var(--nav); backdrop-filter: blur(25px); display: flex; overflow-x: auto; padding: 10px 5px; border-radius: 25px; border: 1px solid var(--border); z-index: 2000; scrollbar-width: none; }
-        .nav-item { min-width: 55px; text-align: center; color: #555; font-size: 8px; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--gold); transform: translateY(-3px); }
-        .nav-item i { display: block; font-size: 18px; margin-bottom: 3px; font-style: normal; }
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: rgba(10,15,25,0.95); backdrop-filter: blur(25px); display: flex; overflow-x: auto; padding: 12px 5px; border-radius: 30px; border: 1px solid var(--border); z-index: 2000; scrollbar-width: none; }
+        .nav-item { min-width: 55px; text-align: center; color: #555; font-size: 9px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--gold); transform: translateY(-3px); font-weight: 900; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; font-style: normal; }
 
-        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; border-radius: 12px; font-size: 14px; }
-        .btn-pro { width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
-        iframe { width: 100%; height: 500px; border-radius: 20px; border: none; background: #fff; margin-top: 10px; }
-
+        input, select, textarea { width: 100%; padding: 14px; margin: 6px 0; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; border-radius: 14px; font-size: 14px; }
+        .btn-pro { width: 100%; padding: 16px; border: none; border-radius: 16px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
+        
         #pin-screen, #begum-pin-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; align-items: center; justify-content: center; flex-direction: column; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
-        .aura-chat-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 12px; font-size: 12px; height: 120px; overflow-y: auto; border: 1px solid var(--border); margin-top: 10px; }
+        iframe { width: 100%; height: 500px; border-radius: 20px; border: none; background: #fff; margin-top: 10px; }
     </style>
 </head>
 <body onload="init()">
 
     <div id="pin-screen">
-        <h2 style="color:var(--gold)">🔱 CORE ACCESS</h2>
-        <input type="password" id="pin-in" maxlength="4" style="text-align:center; font-size:30px; width:150px;" placeholder="****">
-        <button class="btn-pro" style="width:150px; margin-top:20px;" onclick="checkPin('master')">VERIFY</button>
+        <h2 style="color:var(--gold); letter-spacing: 5px;">AURA GOD ACCESS</h2>
+        <input type="password" id="pin-in" maxlength="4" style="text-align:center; font-size:32px; width:180px;" placeholder="****">
+        <button class="btn-pro" style="width:180px; margin-top:20px;" onclick="checkPin('master')">VERIFY</button>
     </div>
 
     <div id="begum-pin-screen">
-        <h2 style="color:var(--pink)">💎 BEGÜM VAULT</h2>
-        <input type="password" id="begum-pin-in" maxlength="4" style="text-align:center; font-size:30px; width:150px;" placeholder="****">
-        <button class="btn-pro" style="width:150px; margin-top:20px; background:var(--pink); color:#fff;" onclick="checkPin('begum')">OPEN</button>
+        <h2 style="color:var(--pink); letter-spacing: 5px;">💎 VIP BEGÜM</h2>
+        <input type="password" id="begum-pin-in" maxlength="4" style="text-align:center; font-size:32px; width:180px;" placeholder="****">
+        <button class="btn-pro" style="width:180px; margin-top:20px; background:var(--pink); color:#fff;" onclick="checkPin('begum')">OPEN</button>
     </div>
 
     <header class="header">
-        <div class="logo-box" onclick="location.reload()">
-            <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8"/><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="5" fill="none"/></svg>
+        <div class="logo" onclick="location.reload()">
+            <svg viewBox="0 0 100 100" style="width:50px;"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8"/><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="5" fill="none"/></svg>
         </div>
-        <div style="font-size:10px; color:var(--sky); font-weight:900; margin-top:5px; letter-spacing:2px;">AURA SUPREME CORE v32</div>
+        <div class="aura-ai-badge">AURA NEURAL v34.0</div>
     </header>
 
     <div id="p-dash" class="panel active">
         <div class="card" style="border-left-color:var(--purple)">
-            <h3>AURA AI Terminal</h3>
-            <div id="aura-chat" class="aura-chat-box">Hasan, sistemler %100 kapasiteyle çalışıyor. Bugün ciro hedefine odaklanalım.</div>
+            <h3>Neural Terminal</h3>
+            <input type="text" id="ai-cmd" placeholder="Komut ver (Örn: Hasan 100 harcadı)" onchange="aiCommand(this.value)">
+            <div id="ai-msg" style="font-size:12px; margin-top:10px; color:var(--purple); font-weight:bold;">AURA: Komut bekleniyor İmparator.</div>
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <div class="card"><h3>Cüzdan</h3><div class="val" id="d-bal">0 ₺</div></div>
-            <div class="card"><h3>Bütçe Durumu</h3><div class="progress-bg"><div id="budget-bar" class="progress-fill"></div></div></div>
-            <div class="card"><h3>Pound</h3><div class="val" style="color:var(--green)">58.00 ₺</div></div>
-            <div class="card"><h3>Molada</h3><div class="val" id="d-mola">0 / 5</div></div>
+            <div class="card"><h3>Pound</h3><div class="val" style="color:var(--green)">58.0 ₺</div></div>
+            <div class="card"><h3>Harcama</h3><div id="budget-view" style="font-size:10px; margin-top:5px;">Limit: %0</div><div style="width:100%; height:4px; background:#222; border-radius:2px; margin-top:5px;"><div id="budget-bar" style="height:100%; background:var(--red); width:0%;"></div></div></div>
+            <div class="card"><h3>Dükkan</h3><div class="val" style="color:var(--gold)">AÇIK</div></div>
         </div>
-        <div class="card"><h3>Radar: Marmaris</h3><p id="radar-info" style="font-size:12px; opacity:0.8;">🚢 28 Nisan: MSC Divina (4.000 Yolcu Bekleniyor)</p></div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Mağaza Operasyon</h2>
+        <h2 style="color:var(--gold)">💼 Mağaza Komuta</h2>
         <div id="staff-container"></div>
     </div>
 
+    <div id="p-lab" class="panel">
+        <h2 style="color:var(--purple)">🧪 Project idea Lab</h2>
+        <div class="card">
+            <h3>Store OS & 48Premium</h3>
+            <div id="lab-list"></div>
+            <textarea id="lab-in" placeholder="Yeni bir özellik veya kod fikri yaz..."></textarea>
+            <button class="btn-pro" style="background:var(--purple); color:#fff;" onclick="addLab()">MÜHÜRLE</button>
+        </div>
+    </div>
+
     <div id="p-stock" class="panel">
-        <h2 style="color:var(--sky)">📦 Akıllı Stok Takibi</h2>
+        <h2 style="color:var(--sky)">📦 Akıllı Stok</h2>
         <div id="stock-list"></div>
         <div class="card">
             <input type="text" id="st-n" placeholder="Ürün Adı">
-            <input type="number" id="st-q" placeholder="Adet">
+            <input type="number" id="st-q" placeholder="Eksik Miktar">
             <button class="btn-pro" onclick="addStock()">EKLE</button>
         </div>
     </div>
 
     <div id="p-bank" class="panel">
         <h2 style="color:var(--green)">💰 Banker Pro</h2>
-        <div class="card" style="background:linear-gradient(45deg, #111827, #1e293b)">
-            <h3>Döviz Hesaplayıcı</h3>
+        <div class="card" style="background:linear-gradient(45deg, #111, #1e293b)">
+            <h3>Hesap Makinesi</h3>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="number" id="calc-v" placeholder="Miktar" oninput="calculate()">
-                <select id="calc-t" onchange="calculate()"><option value="58">GBP 58₺</option><option value="50">EUR 50₺</option><option value="42">USD 42₺</option></select>
+                <input type="number" id="calc-v" placeholder="Döviz" oninput="calc()">
+                <select id="calc-t" onchange="calc()"><option value="58">GBP 58₺</option><option value="50">EUR 50₺</option><option value="42">USD 42₺</option></select>
             </div>
-            <div id="calc-r" style="font-size:26px; font-weight:900; color:var(--green); margin-top:10px;">0.00 ₺</div>
+            <div id="calc-r" style="font-size:28px; font-weight:900; color:var(--green); margin-top:10px;">0.00 ₺</div>
         </div>
+        <div id="fin-list"></div>
         <div class="card">
-            <input type="text" id="e-n" placeholder="Harcama/Gelir Adı">
+            <input type="text" id="e-n" placeholder="Açıklama">
             <input type="number" id="e-a" placeholder="Tutar (₺)">
-            <select id="e-t"><option value="rev">Gelir (+)</option><option value="exp">Gider (-)</option></select>
+            <select id="e-t"><option value="rev">Gelir (+)</option><option value="exp">Hider (-)</option></select>
             <button class="btn-pro" onclick="addFin()">İŞLE</button>
         </div>
     </div>
 
     <div id="p-odds" class="panel">
-        <h2 style="color:var(--red)">⚽ Stadium & Canlı Skor</h2>
-        <div class="card">
-            <h3>Bahis Hesapla</h3>
-            <input type="number" id="o-val" placeholder="Toplam Oran" oninput="calcBet()">
-            <div id="o-res" style="font-size:20px; color:var(--green); font-weight:900; margin-top:10px;">0.00 ₺</div>
-        </div>
+        <h2 style="color:var(--red)">⚽ Stadium</h2>
         <iframe src="https://m.flashscore.com.tr/"></iframe>
     </div>
 
     <div id="p-begum" class="panel">
-        <h2 style="color:var(--pink)">💎 Begüm VIP Vault</h2>
+        <h2 style="color:var(--pink)">💎 VIP Begüm</h2>
         <div id="begum-list"></div>
         <input type="text" id="b-note" placeholder="Ona not bırak...">
         <button class="btn-pro" style="background:var(--pink); color:#fff;" onclick="addBegum()">KAYDET</button>
@@ -142,14 +143,19 @@
         <div class="card">
             <input type="password" id="g-p1" placeholder="Master PIN">
             <input type="password" id="g-p2" placeholder="Begüm PIN">
-            <button class="btn-pro" onclick="saveGod()">CORE GÜNCELLE</button>
+            <button class="btn-pro" onclick="saveGod()">CORE UPDATE</button>
         </div>
-        <button class="btn-pro" style="background:#444; color:#fff; margin-top:20px;" onclick="wipe()">SİSTEMİ SIFIRLA</button>
+        <div class="card">
+            <input type="text" id="p-new" placeholder="Yeni Personel">
+            <button class="btn-pro" style="background:var(--sky)" onclick="addStaff()">EKİBE KAT</button>
+        </div>
+        <button class="btn-pro" style="background:#444; color:#fff; margin-top:20px;" onclick="wipe()">RESET SYSTEM</button>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active" onclick="nav('p-dash', this)"><i>🏠</i>Dash</div>
-        <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Mola</div>
+        <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Store</div>
+        <div class="nav-item" onclick="nav('p-lab', this)"><i>🧪</i>Lab</div>
         <div class="nav-item" onclick="nav('p-stock', this)"><i>📦</i>Stok</div>
         <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Bank</div>
         <div class="nav-item" onclick="nav('p-odds', this)"><i>⚽</i>Maç</div>
@@ -158,16 +164,16 @@
     </nav>
 
     <script>
-        const DB_KEY = 'NO48_SUPREME_CORE_V32';
+        const DB_KEY = 'NO48_ULTIMATE_V34';
         const initialStaff = [
-            {name: "Hasan Yaylalı", active: null}, {name: "Öznur Balım", active: null},
-            {name: "Gamze Yılmaz", active: null}, {name: "Nermin Şensezer", active: null},
-            {name: "Nazan Irgın", active: null}
+            {n: "Hasan Yaylalı", a: null, task: ""}, {n: "Öznur Balım", a: null, task: ""},
+            {n: "Gamze Yılmaz", a: null, task: ""}, {n: "Nermin Şensezer", a: null, task: ""},
+            {n: "Nazan Irgın", a: null, task: ""}
         ];
 
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
             salary: 52000, pin: "1234", begumPin: "0000", staff: initialStaff,
-            expenses: [], revenue: [], begum: [], stock: [], kurlar: {gbp:58, eur:50, usd:42}
+            expenses: [], revenue: [], begum: [], stock: [], lab: [], logs: []
         };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
@@ -180,7 +186,7 @@
                 document.getElementById(type === 'master' ? 'pin-screen' : 'begum-pin-screen').style.display = 'none';
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById(type === 'master' ? 'p-god' : 'p-begum').classList.add('active');
-            } else { alert("HATALI PIN"); }
+            } else { alert("ACCESS DENIED"); }
         }
 
         function nav(id, el) {
@@ -192,9 +198,20 @@
             el.classList.add('active');
         }
 
-        function startM(idx, type, mins) {
-            let s = db.staff[idx]; if(s.active) return;
-            s.active = { type, start: Date.now(), limit: mins * 60000 };
+        function aiCommand(cmd) {
+            cmd = cmd.toLowerCase();
+            if(cmd.includes("harcadı")) {
+                let amt = cmd.match(/\d+/)[0];
+                db.expenses.push({name: "AI Komut Harcama", amt: Number(amt)});
+                document.getElementById('ai-msg').innerText = `AURA: ${amt}₺ cüzdandan düşüldü.`;
+                save();
+            }
+            document.getElementById('ai-cmd').value = '';
+        }
+
+        function startM(i, type, mins) {
+            if(db.staff[i].a) return;
+            db.staff[i].a = { type, start: Date.now(), limit: mins * 60000 };
             save();
         }
 
@@ -204,46 +221,45 @@
             let total = db.salary + rev - exp;
             document.getElementById('d-bal').innerText = total.toLocaleString() + " ₺";
             
-            let budgetPerc = (exp / db.salary) * 100;
-            document.getElementById('budget-bar').style.width = Math.min(budgetPerc, 100) + "%";
-            document.getElementById('budget-bar').style.backgroundColor = budgetPerc > 80 ? 'var(--red)' : 'var(--green)';
+            let perc = (exp / db.salary) * 100;
+            document.getElementById('budget-view').innerText = `Limit: %${Math.round(perc)}`;
+            document.getElementById('budget-bar').style.width = Math.min(perc, 100) + "%";
 
             // Staff
-            let onM = 0;
             document.getElementById('staff-container').innerHTML = db.staff.map((s, i) => {
                 let timer = '';
-                if(s.active) {
-                    onM++;
-                    let rem = s.active.limit - (Date.now() - s.active.start);
+                if(s.a) {
+                    let rem = s.a.limit - (Date.now() - s.a.start);
                     let m = Math.floor(Math.abs(rem)/60000); let sec = Math.floor((Math.abs(rem)%60000)/1000);
                     timer = `<div class="timer-view">${m}:${sec<10?'0':''}${sec}</div>`;
                 }
-                return `<div class="card">
-                    <b>${s.name}</b>
+                return `<div class="card staff-card">
+                    <b>${s.n}</b> <input type="text" placeholder="Görev..." value="${s.task||''}" oninput="db.staff[${i}].task=this.value; localStorage.setItem('${DB_KEY}', JSON.stringify(db));" style="font-size:11px;">
                     ${timer}
                     <div class="btn-grid">
                         <button class="m-btn b-yem" onclick="startM(${i},'Yemek',60)">Yemek</button>
                         <button class="m-btn b-m1" onclick="startM(${i},'Mola 1',30)">Mola 1</button>
+                        <button class="m-btn b-m2" onclick="startM(${i},'Mola 2',30)">Mola 2</button>
                         <button class="m-btn b-sig" onclick="startM(${i},'Sigara',0)">Sigara</button>
-                        ${s.active ? `<button class="m-btn b-stop" onclick="db.staff[${i}].active=null; save();">BİTİR</button>` : ''}
+                        ${s.a ? `<button class="m-btn b-stop" onclick="db.staff[${i}].a=null; save();">BİTİR</button>` : ''}
                     </div>
                 </div>`;
             }).join('');
-            document.getElementById('d-mola').innerText = `${onM} / ${db.staff.length}`;
 
-            // Lists
-            document.getElementById('stock-list').innerHTML = db.stock.map((st, i) => `<div class="card" style="border-left-color:var(--sky)">${st.n} (${st.q}) <span onclick="db.stock.splice(${i},1); save();" style="float:right; color:red">×</span></div>`).join('');
+            document.getElementById('stock-list').innerHTML = db.stock.map((st, i) => `<div class="card" style="border-left-color:var(--sky)">${st.n} (${st.q}) <span onclick="db.stock.splice(${i},1); save()" style="float:right; color:red">×</span></div>`).join('');
             document.getElementById('begum-list').innerHTML = db.begum.map(n => `<div class="card" style="border-left-color:var(--pink)">${n}</div>`).join('');
+            document.getElementById('lab-list').innerHTML = db.lab.map(l => `<div class="card" style="border-left-color:var(--purple)">${l}</div>`).join('');
+            document.getElementById('fin-list').innerHTML = [...db.revenue, ...db.expenses].reverse().slice(0,3).map(e => `<div style="font-size:10px; opacity:0.5; margin-bottom:5px;">${e.name}: ${e.amt}₺</div>`).join('');
         }
 
-        // Global functions
-        function calculate() { let v = document.getElementById('calc-v').value; let t = document.getElementById('calc-t').value; document.getElementById('calc-r').innerText = (v * t).toLocaleString() + " ₺"; }
-        function calcBet() { let o = document.getElementById('o-val').value; document.getElementById('o-res').innerText = (o * 100).toLocaleString() + " ₺ (100₺ Misli)"; }
-        function addFin() { let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value; if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); document.getElementById('e-n').value=''; document.getElementById('e-a').value=''; } }
-        function addStock() { let n = document.getElementById('st-n').value; let q = document.getElementById('st-q').value; if(n && q){ db.stock.push({n, q}); save(); document.getElementById('st-n').value=''; document.getElementById('st-q').value=''; } }
+        function calc() { let v = document.getElementById('calc-v').value; let t = document.getElementById('calc-t').value; document.getElementById('calc-r').innerText = (v * t).toLocaleString() + " ₺"; }
+        function addFin() { let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value; if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); } }
+        function addStock() { let n = document.getElementById('st-n').value; let q = document.getElementById('st-q').value; if(n && q){ db.stock.push({n, q}); save(); } }
         function addBegum() { let v = document.getElementById('b-note').value; if(v){db.begum.push(v); save(); document.getElementById('b-note').value='';} }
+        function addLab() { let v = document.getElementById('lab-in').value; if(v){db.lab.push(v); save(); document.getElementById('lab-in').value='';} }
+        function addStaff() { let n = document.getElementById('p-new').value; if(n){db.staff.push({n, a:null, task:''}); save(); } }
         function saveGod() { db.pin = document.getElementById('g-p1').value || db.pin; db.begumPin = document.getElementById('g-p2').value || db.begumPin; save(); alert("CORE UPDATED."); }
-        function wipe() { if(confirm("SIFIRLANSIN MI?")){localStorage.clear(); location.reload();} }
+        function wipe() { if(confirm("WIPE SYSTEM?")){localStorage.clear(); location.reload();} }
     </script>
 </body>
-</html>
+            </html>
