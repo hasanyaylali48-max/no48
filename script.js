@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputBox = document.querySelector('.input-box');
     const chatContainer = document.querySelector('.chat-container');
 
-    // YENİ API ANAHTARIN BURAYA EKLENDİ
     const API_KEY = 'AIzaSyAORRPdeXV_Ie5VjVFdwgJyPxLU9J47pWA'; 
 
     sendBtn.addEventListener('click', sendMessage);
@@ -21,11 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            // DİKKAT: Modeli güncel olan gemini-2.5-flash ile değiştirdik!
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    system_instruction: {
+                    systemInstruction: {
                         parts: [{ text: "Senin adın H&B. Sen yaratıcının özel kişisel asistanısın. Robot gibi veya sözlük gibi değil, samimi, esprili, havalı ve zeki bir dost gibi cevaplar ver. Uzun ve sıkıcı açıklamalardan kaçın, kısa ve net ol. Logondaki kedi ve köpeği temsilen bazen 🐾, 🐱 veya 🐶 emojilerini kullan." }]
                     },
                     contents: [{ parts: [{ text: text }] }]
