@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NO:48 | THE BEAST</title>
+    <style>
+        :root { --bg: #05070a; --card: #10141d; --gold: #d4af37; --sky: #00d2ff; --text: #ffffff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
+        .header { text-align: center; padding: 20px; background: linear-gradient(to bottom, #10141d, transparent); }
+        .logo-svg { width: 80px; height: 80px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .panel { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 15px; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--gold); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #1a202c; border: 1px solid #2d3748; color: white; border-radius: 10px; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-gold { background: var(--gold); color: #000; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #0a0e14; display: flex; overflow-x: auto; padding: 15px; border-top: 1px solid #1f2937; z-index: 1000; }
+        .nav-item { min-width: 70px; text-align: center; color: #555; font-size: 10px; cursor: pointer; }
+        .nav-item.active { color: var(--gold); }
+        .person-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #1f2937; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="35" r="20" fill="#FFD700" opacity="0.8" />
+            <path d="M10 75 Q50 60 90 75" fill="#38BDF8" />
+            <path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="#D4AF37" />
+            <circle cx="50" cy="62" r="6" fill="white" />
+        </svg>
+        <h1 style="color:var(--gold); margin:5px 0;">NO:48</h1>
+        <p id="aura-msg" style="font-size:12px; color:var(--sky);">"AURA: Sistemler hazır, emrindeyim Hasan."</p>
+    </div>
+
+    <div id="p-dashboard" class="panel active">
+        <div class="card"><h3>Marmaris Zamanı</h3><div id="clock" style="font-size: 32px; font-weight: 800;">00:00</div></div>
+        <div class="card"><h3>Mola Durumu</h3><div style="font-size: 24px;"><span id="break-count">0</span> / <span id="total-staff">13</span></div></div>
+        <div class="card"><h3>Cüzdan</h3><div id="salary-view">Maaş: 52.000 ₺</div></div>
+    </div>
+
+    <div id="p-store" class="panel">
+        <h2 style="color:var(--gold);">Store OS</h2>
+        <div class="card"><h3>Aktif Ekip</h3><div id="staff-list"></div></div>
+    </div>
+
+    <div id="p-god" class="panel">
+        <h2 style="color:var(--gold);">⚡ Tanrı Modu</h2>
+        <div class="card">
+            <h3>Genel Ayarlar</h3>
+            <input type="text" id="set-name" placeholder="Uygulama Adı">
+            <input type="number" id="set-salary" placeholder="Maaş Miktarı">
+            <button class="btn btn-gold" onclick="saveSettings()">Sistemi Güncelle</button>
+        </div>
+        <div class="card">
+            <h3>Personel Ekle</h3>
+            <input type="text" id="new-member" placeholder="İsim Soyisim">
+            <button class="btn" style="background:var(--sky); color:black;" onclick="addMember()">Ekibe Kat</button>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="switchPanel('p-dashboard')">🏠<br>Dash</div>
+        <div class="nav-item" onclick="switchPanel('p-store')">💼<br>Store</div>
+        <div class="nav-item">💎<br>Begüm</div>
+        <div class="nav-item" onclick="switchPanel('p-god')">⚡<br>Tanrı</div>
+    </nav>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('no48_db')) || { appName: "NO:48", salary: 52000, staff: [] };
+        function saveToDB() { localStorage.setItem('no48_db', JSON.stringify(db)); renderAll(); }
+        function switchPanel(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        }
+        function saveSettings() {
+            db.appName = document.getElementById('set-name').value || db.appName;
+            db.salary = document.getElementById('set-salary').value || db.salary;
+            saveToDB(); alert("Sistem Güncellendi.");
+        }
+        function addMember() {
+            let name = document.getElementById('new-member').value;
+            if(name) { db.staff.push(name); saveToDB(); document.getElementById('new-member').value = ''; }
+        }
+        function renderAll() {
+            document.getElementById('total-staff').innerText = db.staff.length;
+            document.getElementById('salary-view').innerText = "Maaş: " + Number(db.salary).toLocaleString() + " ₺";
+            let listHTML = '';
+            db.staff.forEach((m, i) => {
+                listHTML += `<div class="person-row"><span>${m}</span><button onclick="removeMember(${i})" style="color:red; background:none; border:none;">×</button></div>`;
+            });
+            document.getElementById('staff-list').innerHTML = listHTML;
+        }
+        function removeMember(i) { db.staff.splice(i, 1); saveToDB(); }
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+        }, 1000);
+        renderAll();
+    </script>
+</body>
+</html>
