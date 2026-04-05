@@ -3,40 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE BEAST v6.0</title>
+    <title>NO:48 | THE BEAST v7.0</title>
     <style>
         :root { --bg: #05070a; --card: #10141d; --gold: #d4af37; --sky: #00d2ff; --text: #ffffff; --red: #ff4d4d; --green: #4ade80; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        .header { text-align: center; padding: 20px; background: linear-gradient(to bottom, #10141d, transparent); border-bottom: 1px solid #1f2937; }
-        .logo-svg { width: 60px; height: 60px; filter: drop-shadow(0 0 10px var(--gold)); }
-        .aura-box { font-size: 11px; color: var(--sky); background: rgba(0,210,255,0.05); padding: 10px; border-radius: 12px; margin: 10px 15px; border: 1px dashed var(--sky); }
+        .header { text-align: center; padding: 25px; background: linear-gradient(to bottom, #10141d, transparent); border-bottom: 1px solid #1f2937; }
+        .logo-svg { width: 70px; height: 70px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .aura-box { font-size: 11px; color: var(--sky); background: rgba(0,210,255,0.05); padding: 12px; border-radius: 15px; margin: 10px 20px; border: 1px dashed var(--sky); line-height: 1.4; }
 
-        .panel { display: none; padding: 15px; animation: slideUp 0.3s ease-out; }
+        .panel { display: none; padding: 20px; animation: slideUp 0.3s ease-out; }
         .panel.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid #1f2937; position: relative; }
-        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-        .val { font-size: 18px; font-weight: 800; margin-top: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid #1f2937; position: relative; }
+        .card h3 { margin: 0; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+        .val { font-size: 22px; font-weight: 800; margin-top: 8px; }
 
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #161e2d; border-radius: 12px; margin-bottom: 8px; border-left: 3px solid var(--gold); }
-        .btn-mola { background: var(--green); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 10px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #161e2d; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
+        .btn-mola { background: var(--green); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; }
         .btn-mola.active { background: var(--red); color: white; }
 
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 12px 5px; border-top: 1px solid #1f2937; z-index: 1000; }
-        .nav-item { min-width: 70px; text-align: center; color: #444; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: var(--gold); }
-        .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; font-style: normal; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 15px 5px; border-top: 1px solid #1f2937; z-index: 1000; scrollbar-width: none; }
+        .nav-item { min-width: 80px; text-align: center; color: #444; font-size: 10px; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 5px; font-style: normal; }
 
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #161e2d; border: 1px solid #2d3748; color: white; border-radius: 10px; }
-        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; background: var(--gold); color: #000; text-transform: uppercase; }
+        input { width: 100%; padding: 14px; margin: 10px 0; background: #161e2d; border: 1px solid #2d3748; color: white; border-radius: 12px; outline: none; }
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; background: var(--gold); color: #000; }
         
-        /* Maç Ekranı Düzenlemesi */
-        .match-frame { width: 100%; height: 550px; border: none; border-radius: 15px; background: #fff; margin-top: 10px; }
-        .external-btn { background: #1a73e8; color: white; padding: 15px; border-radius: 10px; text-align: center; text-decoration: none; display: block; margin-top: 10px; font-weight: bold; }
+        /* Stadium Özel Alan */
+        .stadium-container { width: 100%; height: 600px; background: #fff; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold); }
+        .score-iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -47,53 +47,54 @@
             <path d="M10 75 Q50 60 90 75" fill="#38BDF8" />
             <path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="#D4AF37" />
         </svg>
-        <h1 id="app-title" style="color:var(--gold); margin:0; font-size: 22px;">NO:48</h1>
-        <div class="aura-box" id="aura-msg">AURA: Tüm sistemler devrede, Hasan.</div>
+        <h1 id="app-title" style="color:var(--gold); margin:5px 0; letter-spacing: 3px;">NO:48</h1>
+        <div class="aura-box" id="aura-msg">AURA: Hasan, skorlar için yedek sistem devrede.</div>
     </div>
 
     <div id="p-dash" class="panel active">
         <div class="grid">
-            <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
-            <div class="card" style="border-color:var(--green)"><h3>Canlı Kur</h3><div class="val">GBP: <span id="gbp-rate">41.25</span>₺</div></div>
-            <div class="card" style="border-color:var(--sky)"><h3>Mola</h3><div class="val"><span id="mola-count">0</span> / <span id="staff-total">0</span></div></div>
+            <div class="card"><h3>Zaman</h3><div class="val" id="clock">00:00</div></div>
+            <div class="card" style="border-color:var(--green)"><h3>Canlı GBP</h3><div class="val">£: <span id="gbp-val">41.25</span></div></div>
+            <div class="card" style="border-color:var(--sky)"><h3>Mola Durumu</h3><div class="val"><span id="mola-count">0</span> / <span id="staff-total">0</span></div></div>
             <div class="card"><h3>Maaş</h3><div class="val" id="salary-val">52,000 ₺</div></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Ekip & Mola</h2>
+        <h2 style="color:var(--gold)">💼 Ekip Yönetimi</h2>
         <div id="staff-list"></div>
     </div>
 
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div id="begum-notes"></div>
-        <input type="text" id="begum-input" placeholder="Hatırlatıcı yaz...">
-        <button class="btn-main" onclick="addNote('begum')">Ekle</button>
+        <input type="text" id="begum-input" placeholder="Ona not bırak...">
+        <button class="btn-main" onclick="addNote('begum')">Notu Kaydet</button>
     </div>
 
     <div id="p-odds" class="panel">
-        <h2 style="color:var(--red)">⚽ Stadium</h2>
-        <p style="font-size:12px; color:#aaa;">Aşağıda skorlar yüklenmezse mavi butona bas:</p>
-        <iframe class="match-frame" src="https://www.livescore.bz/webmasters/external/v2/livescore?timezone=Europe/Istanbul&show_logos=1&events=1"></iframe>
-        <a href="https://m.livescore.com/soccer/live/" target="_blank" class="external-btn">🚀 CANLI SKORLARI TAM EKRAN AÇ</a>
+        <h2 style="color:var(--red)">⚽ Stadium: Canlı Skorlar</h2>
+        <div class="stadium-container">
+            <iframe class="score-iframe" src="https://m.flashscore.com.tr/"></iframe>
+        </div>
+        <p style="font-size:11px; color:#aaa; margin-top:10px;">Not: Eğer beyaz ekran görürsen, Marmaris mağaza internetindeki 'Güvenli İnternet' kısıtlamasını kontrol et veya mobil veriyle dene.</p>
     </div>
 
     <div id="p-bank" class="panel">
-        <h2 style="color:var(--green)">💰 Finans</h2>
+        <h2 style="color:var(--green)">💰 Banker: Finans</h2>
         <div class="card">
-            <h3>Kurlar</h3>
-            <p>🇺🇸 USD: 32.42 ₺ | 🇪🇺 EUR: 35.18 ₺</p>
-            <p>🇬🇧 GBP: 41.28 ₺ | 🟡 ALTIN: 2.450 ₺</p>
+            <h3>Döviz Masası</h3>
+            <p>🇺🇸 USD: 32.45 ₺ | 🇪🇺 EUR: 35.12 ₺</p>
+            <p>🇬🇧 GBP: 41.25 ₺ | 🟡 ALTIN: 2.445 ₺</p>
         </div>
     </div>
 
     <div id="p-god" class="panel">
         <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
-            <input type="text" id="set-name" placeholder="Sistem Adı">
+            <input type="text" id="set-name" placeholder="Uygulama Adı">
             <input type="number" id="set-salary" placeholder="Maaş">
-            <button class="btn-main" onclick="updateGod()">Güncelle</button>
+            <button class="btn-main" onclick="updateGod()">Sistemi Güncelle</button>
         </div>
         <div class="card">
             <input type="text" id="set-staff" placeholder="Personel İsmi">
@@ -124,7 +125,7 @@
         function updateGod() {
             db.name = document.getElementById('set-name').value || db.name;
             db.salary = document.getElementById('set-salary').value || db.salary;
-            save(); alert("Sistem güncellendi.");
+            save(); alert("Tanrı emirleri işlendi.");
         }
         function createStaff() {
             let n = document.getElementById('set-staff').value;
@@ -149,12 +150,12 @@
             document.getElementById('begum-notes').innerHTML = db.begum.map((n, i) => `
                 <div class="item-row" style="border-color:var(--sky)"><span>${n}</span><span onclick="remove('begum',${i})">✓</span></div>
             `).join('');
-            document.getElementById('aura-msg').innerText = onMola > 2 ? "AURA: Mağazada personel azaldı, dikkat!" : "AURA: Her şey kontrol altında.";
+            document.getElementById('aura-msg').innerText = onMola > 2 ? "AURA: Hasan, mağaza boşalıyor, mola yönetimi kritik!" : "AURA: Her şey kontrolümde.";
         }
 
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('gbp-rate').innerText = (41 + Math.random()).toFixed(2);
+            document.getElementById('gbp-val').innerText = (41 + Math.random()).toFixed(2);
         }, 1000);
 
         render();
