@@ -3,334 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | EMPEROR OS v29.0</title>
+    <title>NO:48 | HEARTBEAT v31.0</title>
     <style>
         :root {
             --gold: #d4af37; --gold-glow: rgba(212, 175, 55, 0.4);
             --sky: #00d2ff; --sky-glow: rgba(0, 210, 255, 0.4);
-            --red: #ff4d4d; --green: #4ade80; --purple: #a855f7;
+            --red: #ff4d4d; --green: #4ade80; --purple: #a855f7; --pink: #ff69b4;
             --bg: #030508; --card: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.08);
             --nav: rgba(10, 15, 25, 0.95);
         }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background: radial-gradient(circle at top right, #111, var(--bg)); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { 
-            background: radial-gradient(circle at top right, #111, var(--bg)); 
-            color: #fff; margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            padding-bottom: 120px; overflow-x: hidden; min-height: 100vh;
-        }
-
-        /* Glassmorphism Header */
-        .header { 
-            text-align: center; padding: 25px 20px; border-bottom: 1px solid var(--border); 
-            background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            position: sticky; top: 0; z-index: 1000;
-        }
+        /* Glass Header */
+        .header { text-align: center; padding: 25px 20px; border-bottom: 1px solid var(--border); background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; }
         .logo-box svg { width: 50px; height: 50px; filter: drop-shadow(0 0 10px var(--gold)); }
-        .aura-badge { 
-            font-size: 10px; background: var(--sky-glow); color: var(--sky); padding: 6px 16px; 
-            border-radius: 30px; border: 1px solid var(--sky); display: inline-block; 
-            margin-top: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
-            box-shadow: 0 0 15px var(--sky-glow);
-        }
+        .aura-neural-badge { font-size: 10px; background: var(--purple); color: #fff; padding: 6px 16px; border-radius: 30px; display: inline-block; margin-top: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 15px var(--purple); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; box-shadow: 0 0 25px var(--purple); } 100% { opacity: 0.8; } }
 
-        .panel { display: none; padding: 20px; animation: panelFade 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .panel { display: none; padding: 20px; animation: slideUp 0.5s ease; }
         .panel.active { display: block; }
-        @keyframes panelFade { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Emperor Cards */
-        .card { 
-            background: var(--card); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 28px; padding: 22px; border: 1px solid var(--border); 
-            margin-bottom: 18px; position: relative; overflow: hidden;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--gold); box-shadow: 0 0 10px var(--gold);
-        }
-        .card h3 { margin: 0; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
-        .val { font-size: 26px; font-weight: 900; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+        .card { background: var(--card); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); margin-bottom: 18px; position: relative; overflow: hidden; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
+        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; }
+        .val { font-size: 24px; font-weight: 900; margin-top: 10px; }
 
-        /* Mola System Grid */
+        /* Mola System */
         .staff-card { border-left: none; }
         .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .m-btn { 
-            padding: 14px; border: none; border-radius: 16px; font-size: 10px; font-weight: 900; 
-            cursor: pointer; color: #000; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.2s;
-        }
-        .m-btn:active { transform: scale(0.95); }
+        .m-btn { padding: 14px; border: none; border-radius: 16px; font-size: 10px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
         .b-yem { background: var(--gold); } .b-m1 { background: var(--sky); } .b-m2 { background: var(--purple); color: #fff; } .b-sig { background: var(--green); }
-        .b-pau { background: #222; color: #fff; border: 1px solid #444; } .b-stop { background: var(--red); color: #fff; grid-column: span 2; }
-        .timer-view { font-family: 'JetBrains Mono', monospace; font-size: 28px; color: var(--sky); font-weight: bold; margin: 15px 0; text-align: center; text-shadow: 0 0 15px var(--sky-glow); }
+        .b-stop { background: var(--red); color: #fff; grid-column: span 2; }
+        .timer-view { font-family: monospace; font-size: 28px; color: var(--sky); font-weight: bold; margin: 10px 0; text-align: center; }
 
-        /* Floating Nav Bar */
-        .nav-bar { 
-            position: fixed; bottom: 20px; left: 15px; right: 15px;
-            background: var(--nav); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            display: flex; overflow-x: auto; padding: 12px 10px; border-radius: 30px;
-            border: 1px solid var(--border); z-index: 2000; scrollbar-width: none;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-        }
-        .nav-item { min-width: 65px; text-align: center; color: #555; font-size: 10px; cursor: pointer; flex: 1; transition: 0.4s; }
-        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
-        .nav-item i { display: block; font-size: 22px; margin-bottom: 4px; font-style: normal; filter: grayscale(1); transition: 0.4s; }
-        .nav-item.active i { filter: grayscale(0) drop-shadow(0 0 5px var(--gold)); }
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: var(--nav); backdrop-filter: blur(25px); display: flex; overflow-x: auto; padding: 12px 10px; border-radius: 30px; border: 1px solid var(--border); z-index: 2000; scrollbar-width: none; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .nav-item { min-width: 60px; text-align: center; color: #555; font-size: 9px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--gold); transform: translateY(-5px); font-weight: 900; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; font-style: normal; }
 
-        /* Controls & Inputs */
-        input, select, textarea { 
-            width: 100%; padding: 15px; margin: 8px 0; background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border); color: #fff; border-radius: 18px; font-size: 15px;
-        }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
-        .btn-pro { 
-            width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; 
-            background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
-            margin-top: 10px; box-shadow: 0 8px 20px var(--gold-glow);
-        }
+        input, select, textarea { width: 100%; padding: 15px; margin: 8px 0; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; border-radius: 15px; font-size: 14px; }
+        .btn-pro { width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; box-shadow: 0 8px 20px var(--gold-glow); }
 
-        .log-box { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 15px; font-size: 12px; height: 180px; overflow-y: auto; border: 1px solid var(--border); }
-        .log-line { border-bottom: 1px solid var(--border); padding: 8px 0; display: flex; gap: 10px; opacity: 0.7; }
-        .log-t { color: var(--gold); font-weight: bold; }
-
-        /* PIN Overlay - High Security Look */
-        #pin-screen { 
-            display: none; position: fixed; inset: 0; background: #000; z-index: 3000; 
-            align-items: center; justify-content: center; flex-direction: column; 
-            background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-        }
-        #pin-in { width: 220px; text-align: center; font-size: 36px; letter-spacing: 15px; background: transparent; border: none; border-bottom: 2px solid var(--gold); border-radius: 0; }
+        /* Begum UI Special */
+        .mood-box { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+        .mood-icon { font-size: 24px; cursor: pointer; filter: grayscale(1); transition: 0.3s; }
+        .mood-icon.active { filter: grayscale(0) scale(1.3); drop-shadow: 0 0 10px var(--pink); }
+        .milestone-item { padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 13px; }
+        
+        #pin-screen, #begum-pin-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; align-items: center; justify-content: center; flex-direction: column; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
     </style>
 </head>
 <body onload="init()">
 
     <div id="pin-screen">
-        <h2 style="color:var(--gold); letter-spacing: 5px; margin-bottom:30px;">IDENTITY REQUIRED</h2>
-        <input type="password" id="pin-in" maxlength="4" placeholder="••••">
-        <button class="btn-pro" style="width:220px; margin-top:40px;" onclick="checkPin()">VERIFY</button>
+        <h2 style="color:var(--gold); letter-spacing: 5px;">AURA SYSTEM LOCK</h2>
+        <input type="password" id="pin-in" maxlength="4" style="width:200px; text-align:center; font-size:30px;" placeholder="****">
+        <button class="btn-pro" style="width:200px; margin-top:30px;" onclick="checkPin('master')">CONNECT</button>
+    </div>
+
+    <div id="begum-pin-screen">
+        <h2 style="color:var(--pink); letter-spacing: 5px;">VIP BEGÜM ACCESS</h2>
+        <input type="password" id="begum-pin-in" maxlength="4" style="width:200px; text-align:center; font-size:30px;" placeholder="****">
+        <button class="btn-pro" style="width:200px; margin-top:30px; background:var(--pink); color:#fff;" onclick="checkPin('begum')">ENTER VAULT</button>
     </div>
 
     <header class="header">
         <div class="logo-box" onclick="location.reload()">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8"/><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="5" fill="none"/></svg>
         </div>
-        <div class="aura-badge" id="aura-chat">AURA: SYSTEM OPERATIONAL</div>
+        <div class="aura-neural-badge" id="aura-status">AURA NEURAL v31.0</div>
     </header>
 
-    <div id="p-home" class="panel active">
-        <div class="card" style="border-left:5px solid var(--sky); background: linear-gradient(to right, rgba(0,210,255,0.05), transparent);">
-            <h3>Emperor's Command</h3>
-            <div id="daily-focus" class="val" style="font-size:16px; line-height:1.4;">Hasan, bugün Marmaris limanında hareketlilik var. Ekibi mola konusunda uyar, ciro hedefine odaklan.</div>
+    <div id="p-dash" class="panel active">
+        <div id="ai-insight" class="card" style="border-left:5px solid var(--purple); background:rgba(168, 85, 247, 0.05);">
+            <h3>Neural Logic</h3>
+            <div id="ai-text" style="font-size:13px; margin-top:10px; opacity:0.8;">Hasan, Begüm bugün biraz yorgun görünüyor, dükkan çıkışı ona bir sürpriz yapmaya ne dersin?</div>
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            <div class="card"><h3>Kişisel Cüzdan</h3><div class="val" id="h-bal" style="color:var(--green)">0 ₺</div></div>
-            <div class="card"><h3>Mağaza Aura</h3><div class="val" style="color:var(--gold)">98%</div></div>
+            <div class="card"><h3>Cüzdan</h3><div class="val" id="d-bal" style="color:var(--green)">0 ₺</div></div>
+            <div class="card"><h3>Dükkan Aura</h3><div class="val" style="color:var(--gold)">98%</div></div>
         </div>
-        <div class="card">
-            <h3>Elite Tasks</h3>
-            <div id="personal-tasks"></div>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <input type="text" id="pt-in" placeholder="Yeni hedef belirle...">
-                <button onclick="addPT()" style="background:var(--gold); border:none; border-radius:15px; width:55px; font-weight:bold; color:#000;">+</button>
-            </div>
-        </div>
+        <div class="card"><h3>Canlı Log</h3><div id="dash-logs" style="font-size:11px; max-height:100px; overflow-y:auto; opacity:0.6;"></div></div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold); letter-spacing:2px;">💼 STORE OPERATIONS</h2>
+        <h2 style="color:var(--gold)">💼 Mağaza & Personel</h2>
         <div id="staff-container"></div>
+    </div>
+
+    <div id="p-bank" class="panel">
+        <h2 style="color:var(--green)">💰 Banker Pro</h2>
         <div class="card">
-            <h3>Live Activity Logs</h3>
-            <div id="dash-logs" class="log-box"></div>
+            <h3>Pound Terminal</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="number" id="calc-v" placeholder="Döviz" oninput="calculate()">
+                <select id="calc-t" onchange="calculate()"><option value="58">GBP (£) 58₺</option><option value="50">EUR (€) 50₺</option><option value="42">USD ($) 42₺</option></select>
+            </div>
+            <div id="calc-r" style="font-size:28px; font-weight:900; color:var(--green); margin-top:15px;">0.00 ₺</div>
+        </div>
+        <div class="card">
+            <input type="text" id="e-n" placeholder="Harcama Adı">
+            <input type="number" id="e-a" placeholder="Tutar (₺)">
+            <select id="e-t"><option value="rev">Gelir (+)</option><option value="exp">Gider (-)</option></select>
+            <button class="btn-pro" onclick="addFin()">İŞLE</button>
+        </div>
+    </div>
+
+    <div id="p-begum" class="panel">
+        <h2 style="color:var(--pink)">💎 VIP Begüm Vault</h2>
+        
+        <div class="card" style="border-left-color:var(--pink)">
+            <h3>Begüm'ün Ruh Hali</h3>
+            <div class="mood-box">
+                <span class="mood-icon" onclick="setMood('happy')">😊</span>
+                <span class="mood-icon" onclick="setMood('tired')">😴</span>
+                <span class="mood-icon" onclick="setMood('romantic')">🥰</span>
+                <span class="mood-icon" onclick="setMood('busy')">👩‍💻</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Hayal Listesi & Sürprizler</h3>
+            <div id="wishlist"></div>
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:5px;">
+                <input type="text" id="w-n" placeholder="Hayal/Hediye">
+                <input type="number" id="w-p" placeholder="Fiyat">
+            </div>
+            <button class="btn-pro" style="background:var(--pink); color:#fff;" onclick="addWish()">LİSTEYE EKLE</button>
+        </div>
+
+        <div class="card">
+            <h3>Milestone Vault (Anılar)</h3>
+            <div id="milestones"></div>
+            <input type="text" id="m-n" placeholder="Önemli Tarih/Anı">
+            <button class="btn-pro" onclick="addMile()">MÜHÜRLE</button>
+        </div>
+
+        <div class="card">
+            <h3>Begüm'den Gelen Fikirler</h3>
+            <div id="b-ideas"></div>
+            <input type="text" id="b-i-n" placeholder="Onun önerisi...">
+            <button class="btn-pro" onclick="addBegIdea()">PROJEYE EKLE</button>
         </div>
     </div>
 
     <div id="p-lab" class="panel">
-        <h2 style="color:var(--purple); letter-spacing:2px;">🧪 THE IDEA LAB</h2>
-        <div id="ideas-list"></div>
-        <div class="card">
-            <textarea id="idea-in" rows="3" placeholder="Geleceğin uygulamasını planla... (Store OS, 48Premium)"></textarea>
-            <button class="btn-pro" style="background:var(--purple); color:#fff;" onclick="addIdea()">SECURE IDEA</button>
-        </div>
-    </div>
-
-    <div id="p-bank" class="panel">
-        <h2 style="color:var(--green); letter-spacing:2px;">💰 BANKER PRO</h2>
-        <div class="card" style="background: linear-gradient(135deg, rgba(74,222,128,0.05), transparent);">
-            <h3>Currency Terminal</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                <input type="number" id="calc-v" placeholder="Miktar" oninput="calculate()">
-                <select id="calc-t" onchange="calculate()">
-                    <option value="58">GBP (£) - 58₺</option>
-                    <option value="50">EUR (€) - 50₺</option>
-                    <option value="42">USD ($) - 42₺</option>
-                </select>
-            </div>
-            <div id="calc-r" style="font-size:32px; font-weight:900; color:var(--green); margin-top:15px; text-shadow: 0 0 10px rgba(74,222,128,0.3);">0.00 ₺</div>
-        </div>
-        <div id="exp-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
-        <div class="card">
-            <input type="text" id="e-n" placeholder="İşlem Açıklaması">
-            <input type="number" id="e-a" placeholder="Tutar (₺)">
-            <select id="e-t"><option value="rev">Gelir / Ciro (+)</option><option value="exp">Gider (-)</option></select>
-            <button class="btn-pro" onclick="addFin()">PROCESS TRANSACTION</button>
-        </div>
-    </div>
-
-    <div id="p-odds" class="panel">
-        <h2 style="color:var(--red); letter-spacing:2px;">⚽ STADIUM ANALYTICS</h2>
-        <div class="card" style="border-color:var(--red)">
-            <h3>Quick Slip Calc</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                <input type="number" id="o-val" placeholder="Total Oran" oninput="calcBet()">
-                <input type="number" id="o-mis" placeholder="Misli" oninput="calcBet()" value="100">
-            </div>
-            <div id="o-res" style="font-size:24px; font-weight:900; color:var(--green); margin-top:10px;">0.00 ₺</div>
-        </div>
-        <iframe src="https://m.flashscore.com.tr/"></iframe>
-    </div>
-
-    <div id="p-begum" class="panel">
-        <h2 style="color:var(--sky); letter-spacing:2px;">💎 VIP BEGÜM</h2>
-        <div id="begum-list"></div>
-        <div class="card">
-            <input type="text" id="b-note" placeholder="Ona özel bir not bırak...">
-            <button class="btn-pro" style="background:var(--sky); color:#000;" onclick="addBegum()">KAYDET</button>
-        </div>
-    </div>
-
-    <div id="p-radar" class="panel">
-        <h2 style="color:var(--gold); letter-spacing:2px;">🛰️ MARMARIS RADAR</h2>
-        <div class="card">
-            <h3>Cruise Intelligence</h3>
-            <p style="font-size:14px; opacity:0.8;">🚢 28 Nisan: MSC Divina (4.000 Yolcu) <br><b style="color:var(--red)">STATUS: EKSTREM YOĞUNLUK</b></p>
-            <hr style="border:0.1px solid var(--border); margin:15px 0;">
-            <p style="font-size:14px; opacity:0.8;">🏥 Nöbetçi: Sultan Eczanesi <br>📞 0252 412 85 66</p>
-        </div>
+        <h2 style="color:var(--purple)">🧪 Idea Lab</h2>
+        <div id="lab-list"></div>
+        <textarea id="lab-in" placeholder="Kod fikri..."></textarea>
+        <button class="btn-pro" style="background:var(--purple); color:#fff;" onclick="addLab()">KAYDET</button>
     </div>
 
     <div id="p-god" class="panel">
-        <h2 style="color:var(--gold); letter-spacing:2px;">⚡ GOD ARCHITECT</h2>
+        <h2 style="color:var(--gold)">⚡ God Mode</h2>
         <div class="card">
-            <h3>Master Key PIN</h3>
-            <input type="password" id="new-pin" placeholder="Yeni PIN Kodu">
-            <button class="btn-pro" onclick="savePin()">UPDATE ACCESS</button>
+            <input type="password" id="g-p1" placeholder="Yeni Ana PIN">
+            <input type="password" id="g-p2" placeholder="Yeni Begüm PIN">
+            <button class="btn-pro" onclick="saveGod()">CORE GÜNCELLE</button>
         </div>
-        <div class="card">
-            <h3>System Control</h3>
-            <button class="btn-pro" style="background:#444; color:#fff;" onclick="wipe()">SİSTEMİ SIFIRLA</button>
-        </div>
+        <button class="btn-pro" style="background:#444; color:#fff; margin-top:20px;" onclick="wipe()">WIPE SYSTEM</button>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active" onclick="nav('p-home', this)"><i>🏠</i>AURA</div>
+        <div class="nav-item active" onclick="nav('p-dash', this)"><i>🏠</i>Aura</div>
         <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Store</div>
-        <div class="nav-item" onclick="nav('p-lab', this)"><i>🧪</i>Lab</div>
-        <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Finans</div>
-        <div class="nav-item" onclick="nav('p-radar', this)"><i>🛰️</i>Radar</div>
-        <div class="nav-item" onclick="nav('p-odds', this)"><i>⚽</i>Stadium</div>
+        <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Bank</div>
         <div class="nav-item" onclick="nav('p-begum', this)"><i>💎</i>Begüm</div>
+        <div class="nav-item" onclick="nav('p-lab', this)"><i>🧪</i>Lab</div>
         <div class="nav-item" onclick="nav('p-god', this)"><i>⚡</i>God</div>
     </nav>
 
     <script>
-        const DB_KEY = 'NO48_EMPEROR_V29';
+        const DB_KEY = 'NO48_HEARTBEAT_V31';
         const initialStaff = [
-            {name: "Hasan Yaylalı", active: null, task: ""}, {name: "Öznur Balım", active: null, task: ""},
-            {name: "Gamze Yılmaz", active: null, task: ""}, {name: "Nermin Şensezer", active: null, task: ""},
+            {name: "Hasan Yaylalı", active: null, task: ""},
+            {name: "Öznur Balım", active: null, task: ""},
+            {name: "Gamze Yılmaz", active: null, task: ""},
+            {name: "Nermin Şensezer", active: null, task: ""},
             {name: "Nazan Irgın", active: null, task: ""}
         ];
 
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            salary: 52000, pin: "1234", staff: initialStaff,
-            personalTasks: [], ideas: [], expenses: [], revenue: [], 
-            begum: [], logs: [], kurlar: {gbp:58, eur:50, usd:42}
+            salary: 52000, pin: "1234", begumPin: "0000", staff: initialStaff,
+            expenses: [], revenue: [], logs: [], lab: [],
+            begum: { mood: 'happy', wishlist: [], milestones: [], ideas: [] },
+            kurlar: {gbp: 58, eur: 50, usd: 42}
         };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
         function init() { render(); setInterval(render, 1000); }
 
-        function checkPin() {
-            if(document.getElementById('pin-in').value === db.pin) {
-                document.getElementById('pin-screen').style.display = 'none';
-                document.getElementById('pin-in').value = '';
+        function checkPin(type) {
+            let p = type === 'master' ? document.getElementById('pin-in').value : document.getElementById('begum-pin-in').value;
+            let target = type === 'master' ? db.pin : db.begumPin;
+            if(p === target) {
+                document.getElementById(type === 'master' ? 'pin-screen' : 'begum-pin-screen').style.display = 'none';
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('p-god').classList.add('active');
-            } else { alert("ACCESS DENIED!"); }
+                document.getElementById(type === 'master' ? 'p-god' : 'p-begum').classList.add('active');
+            } else { alert("ACCESS DENIED"); }
         }
 
         function nav(id, el) {
             if(id === 'p-god') { document.getElementById('pin-screen').style.display = 'flex'; return; }
+            if(id === 'p-begum') { document.getElementById('begum-pin-screen').style.display = 'flex'; return; }
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // Functions
-        function addPT() { let v = document.getElementById('pt-in').value; if(v){db.personalTasks.push({t:v, d:false}); save(); document.getElementById('pt-in').value='';} }
-        function addIdea() { let v = document.getElementById('idea-in').value; if(v){db.ideas.push(v); save(); document.getElementById('idea-in').value='';} }
-        function addBegum() { let v = document.getElementById('b-note').value; if(v){db.begum.push(v); save(); document.getElementById('b-note').value='';} }
+        // --- Begum Actions ---
+        function setMood(m) { db.begum.mood = m; save(); }
+        function addWish() { let n = document.getElementById('w-n').value; let p = Number(document.getElementById('w-p').value); if(n && p){ db.begum.wishlist.push({n,p,d:false}); save(); document.getElementById('w-n').value=''; document.getElementById('w-p').value=''; } }
+        function addMile() { let n = document.getElementById('m-n').value; if(n){ db.begum.milestones.push({n, d: new Date().toLocaleDateString()}); save(); document.getElementById('m-n').value=''; } }
+        function addBegIdea() { let n = document.getElementById('b-i-n').value; if(n){ db.begum.ideas.push(n); save(); document.getElementById('b-i-n').value=''; } }
 
+        // --- Mola Actions ---
         function startM(idx, type, mins) {
             let s = db.staff[idx]; if(s.active) return;
-            s.active = { type, start: Date.now(), totalPaused: 0, limit: mins * 60000, status: 'running' };
-            db.logs.unshift({t: new Date().toLocaleTimeString(), m: `${s.name}: ${type} BAŞLADI`}); save();
-        }
-        function pauseM(idx) {
-            let s = db.staff[idx].active; if(!s) return;
-            if(s.status === 'running') { s.status = 'paused'; s.lastPausedAt = Date.now(); }
-            else { s.status = 'running'; s.totalPaused += (Date.now() - s.lastPausedAt); }
-            save();
+            s.active = { type, start: Date.now(), limit: mins * 60000 };
+            db.logs.unshift({t: new Date().toLocaleTimeString(), m: `${s.name} ${type} Başladı.`}); save();
         }
 
         function render() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
             let rev = db.revenue.reduce((a,b) => a+b.amt, 0);
             let exp = db.expenses.reduce((a,b) => a+b.amt, 0);
-            document.getElementById('h-bal').innerText = (db.salary + rev - exp).toLocaleString() + " ₺";
+            let total = db.salary + rev - exp;
+            document.getElementById('d-bal').innerText = total.toLocaleString() + " ₺";
 
-            // Elite Tasks
-            document.getElementById('personal-tasks').innerHTML = db.personalTasks.map((t, i) => `
-                <div class="task-item">
-                    <input type="checkbox" ${t.d?'checked':''} onchange="db.personalTasks[${i}].d=!db.personalTasks[${i}].d; save();">
-                    <span style="${t.d?'text-decoration:line-through; opacity:0.4':''}">${t.t}</span>
-                </div>`).join('');
+            // AI Text
+            const moods = { happy: "Begüm bugün çok neşeli, enerjisini paylaş!", tired: "Begüm bugün yorgun, dinlenmesine yardım et.", romantic: "Hasan, tam akşam yemeği planı yapılacak bir gün!", busy: "Begüm şu an projelerine odaklanmış, ona kahve yapabilirsin." };
+            document.getElementById('ai-text').innerText = moods[db.begum.mood];
 
-            // Store Staff
+            // Staff
             document.getElementById('staff-container').innerHTML = db.staff.map((s, i) => {
                 let timer = '';
                 if(s.active) {
-                    let elapsed = (s.active.status==='running'?Date.now():s.active.lastPausedAt) - s.active.start - s.active.totalPaused;
-                    let rem = s.active.limit > 0 ? s.active.limit - elapsed : elapsed;
-                    let m = Math.floor(Math.abs(rem)/60000); let sec = Math.floor((Math.abs(rem)%60000)/1000);
+                    let elapsed = Date.now() - s.active.start;
+                    let m = Math.floor(Math.abs(s.active.limit - elapsed)/60000); let sec = Math.floor((Math.abs(s.active.limit - elapsed)%60000)/1000);
                     timer = `<div class="timer-view">${m}:${sec<10?'0':''}${sec}</div>`;
                 }
-                return `<div class="card staff-card" style="${s.active?'border-color:var(--sky); box-shadow: 0 0 15px var(--sky-glow);':''}">
-                    <div style="display:flex; justify-content:space-between"><b>${s.name}</b><small style="color:var(--gold)">${s.active?s.active.type:'HAZIR'}</small></div>
+                return `<div class="card staff-card">
+                    <b>${s.name}</b> <input type="text" placeholder="Görev..." value="${s.task||''}" oninput="db.staff[${i}].task=this.value; localStorage.setItem('${DB_KEY}', JSON.stringify(db));" style="font-size:11px;">
                     ${timer}
                     <div class="btn-grid">
                         <button class="m-btn b-yem" onclick="startM(${i},'Yemek',60)">Yemek</button>
                         <button class="m-btn b-m1" onclick="startM(${i},'Mola 1',30)">Mola 1</button>
                         <button class="m-btn b-m2" onclick="startM(${i},'Mola 2',30)">Mola 2</button>
                         <button class="m-btn b-sig" onclick="startM(${i},'Sigara',0)">Sigara</button>
-                        ${s.active ? `<button class="m-btn b-pau" onclick="pauseM(${i})">${s.active.status==='paused'?'DEVAM':'DURAT'}</button>` : ''}
                         ${s.active ? `<button class="m-btn b-stop" onclick="db.staff[${i}].active=null; save();">BİTİR</button>` : ''}
                     </div>
                 </div>`;
             }).join('');
 
-            document.getElementById('dash-logs').innerHTML = db.logs.map(l => `<div class="log-line"><span class="log-t">${l.t}</span> ${l.m}</div>`).join('');
-            document.getElementById('begum-list').innerHTML = db.begum.map(n => `<div class="card" style="border-left:4px solid var(--sky); background:rgba(0,210,255,0.02)">${n}</div>`).join('');
-            document.getElementById('ideas-list').innerHTML = db.ideas.map(id => `<div class="card" style="border-left:4px solid var(--purple)">${id}</div>`).join('');
+            // Begum Lists
+            document.getElementById('wishlist').innerHTML = db.begum.wishlist.map((w,i) => `<div class="milestone-item"><span>${w.n}</span> <b style="color:${total > w.p ? 'var(--green)' : 'var(--red)'}">${w.p} ₺</b></div>`).join('');
+            document.getElementById('milestones').innerHTML = db.begum.milestones.map(m => `<div class="milestone-item"><span>${m.n}</span> <i>${m.d}</i></div>`).join('');
+            document.getElementById('b-ideas').innerHTML = db.begum.ideas.map(id => `<div class="card" style="border-left:4px solid var(--gold)">${id}</div>`).join('');
+            document.getElementById('lab-list').innerHTML = db.lab.map(l => `<div class="card" style="border-left:4px solid var(--purple)">${l}</div>`).join('');
+            document.getElementById('dash-logs').innerHTML = db.logs.map(l => `<div>${l.t}: ${l.m}</div>`).join('');
         }
 
         function calculate() { let v = document.getElementById('calc-v').value; let t = document.getElementById('calc-t').value; document.getElementById('calc-r').innerText = (v * t).toLocaleString() + " ₺"; }
-        function calcBet() { let o = document.getElementById('o-val').value; let m = document.getElementById('o-mis').value; document.getElementById('o-res').innerText = (o * m).toLocaleString() + " ₺"; }
         function addFin() { let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value; if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); } }
-        function savePin() { let p = document.getElementById('new-pin').value; if(p){db.pin=p; save(); alert("PIN UPDATED");} }
-        function wipe() { if(confirm("CONFIRM SYSTEM WIPE?")){localStorage.clear(); location.reload();} }
+        function addLab() { let v = document.getElementById('lab-in').value; if(v){ db.lab.push(v); save(); document.getElementById('lab-in').value=''; } }
+        function saveGod() { db.pin = document.getElementById('g-p1').value || db.pin; db.begumPin = document.getElementById('g-p2').value || db.begumPin; save(); alert("CORE UPDATED."); }
+        function wipe() { if(confirm("KIYAMET?")){localStorage.clear(); location.reload();} }
     </script>
 </body>
-    </html>
+                </html>
