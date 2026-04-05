@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputBox = document.querySelector('.input-box');
     const chatContainer = document.querySelector('.chat-container');
 
-    // API Anahtarın buraya eklendi
     const API_KEY = 'AIzaSyBywifUfLoqVU5eAakr5cnzCNtqrCyNDhw'; 
 
     sendBtn.addEventListener('click', sendMessage);
@@ -15,31 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = inputBox.value.trim();
         if (text === '') return;
 
-        // Senin mesajını ekrana ekle
         appendMessage(text, 'user');
         inputBox.value = '';
 
-        // H&B düşünürken görünecek geçici mesaj
         const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
 
         try {
-            // Gemini Yapay Zeka API'sine bağlanıyoruz
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: text }] }]
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
             });
 
             const data = await response.json();
             
-            // Yapay zekadan gelen cevabı ekrana yazdır
             if(data.candidates && data.candidates.length > 0) {
-                const botReply = data.candidates[0].content.parts[0].text;
-                loadingMsg.textContent = botReply;
+                loadingMsg.textContent = data.candidates[0].content.parts[0].text;
+            } else if (data.error) {
+                // İŞTE BURASI: Google'dan gelen gerçek hatayı ekrana basıyoruz
+                loadingMsg.textContent = "Sistem Hatası: " + data.error.message;
             } else {
                 loadingMsg.textContent = "Sanırım beynimde bir kısa devre oldu, tekrar dener misin?";
             }
