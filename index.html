@@ -6,28 +6,38 @@
     <title>H&B Kişisel Asistan</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
         <header>
             <img src="1775402448038.png" alt="H&B Logo" class="logo">
-            <h1>H&B'ye Hoş Geldin</h1>
-            <p>Kişisel asistanın emrinde.</p>
+            <h1>H&B</h1>
+            <p class="subtitle">Kişisel Asistan</p>
         </header>
 
-        <main class="chat-container">
-            <div class="message assistant">
-                Merhaba! Ben H&B. Bugün sana nasıl yardımcı olabilirim? 🐾
+        <div class="chat-container">
+            <div id="setup-panel" style="display:none; padding: 20px; background: #1a1a1a; border-radius: 15px; margin: 10px; border: 1px solid #8A2BE2; text-align: center;">
+                <p style="color: white; font-size: 14px; margin-bottom: 15px;">🔐 H&B'nin beynini aktif etmek için API anahtarını bir kez yapıştır:</p>
+                <input type="password" id="api-input" placeholder="AIzaSy... ile başlayan anahtar" style="width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; margin-bottom: 15px;">
+                <button id="save-key-btn" style="width: 95%; padding: 12px; background: linear-gradient(45deg, #8A2BE2, #FF1493); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Anahtarı Telefonuma Kaydet</button>
             </div>
-        </main>
+            
+            <div class="message assistant">Merhaba Hasan! Senin için ne yapabilirim? 🐾</div>
+        </div>
 
-        <footer>
-            <input type="text" placeholder="H&B'ye bir şey yaz..." class="input-box">
-            <button class="send-btn">Gönder</button>
-        </footer>
+        <div class="input-area">
+            <input type="text" class="input-box" placeholder="H&B'ye bir şeyler sor...">
+            <button class="send-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+            </button>
+        </div>
     </div>
+
     <script src="script.js"></script>
-        <script>
+    <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
