@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputBox = document.querySelector('.input-box');
     const chatContainer = document.querySelector('.chat-container');
 
-    const API_KEY = 'AIzaSyAORRPdeXV_Ie5VjVFdwgJyPxLU9J47pWA'; 
+    // Yepyeni ve güvenli şifreni buraya ekledim!
+    const API_KEY = 'AIzaSyBS5EM43w5hGxXq-4FaR1vq9Hjk8ilzDZI'; 
 
     sendBtn.addEventListener('click', sendMessage);
     inputBox.addEventListener('keypress', function(e) {
@@ -20,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
 
         try {
-            // DİKKAT: Modeli güncel olan gemini-2.5-flash ile değiştirdik!
+            // Modeli senin için gemini-2.5-flash olarak güncelledim!
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     systemInstruction: {
-                        parts: [{ text: "Senin adın H&B. Sen yaratıcının özel kişisel asistanısın. Robot gibi veya sözlük gibi değil, samimi, esprili, havalı ve zeki bir dost gibi cevaplar ver. Uzun ve sıkıcı açıklamalardan kaçın, kısa ve net ol. Logondaki kedi ve köpeği temsilen bazen 🐾, 🐱 veya 🐶 emojilerini kullan." }]
+                        parts: [{ text: "Senin adın H&B. Sen Hasan'ın özel kişisel asistanısın. Kesinlikle ve daima Türkçe konuş. Asla bir çeviri aracı, sözlük veya ansiklopedi gibi davranma. Yaratıcına karşı samimi, esprili, havalı ve zeki bir dost gibi cevaplar ver. Uzun ve sıkıcı açıklamalardan kaçın, kısa ve net ol. Logondaki kedi ve köpeği temsilen bazen 🐾, 🐱 veya 🐶 emojilerini kullan." }]
                     },
                     contents: [{ parts: [{ text: text }] }]
                 })
