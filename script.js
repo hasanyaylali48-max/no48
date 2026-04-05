@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            // DİKKAT: Buradaki modeli gemini-pro olarak değiştirdik!
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if(data.candidates && data.candidates.length > 0) {
                 loadingMsg.textContent = data.candidates[0].content.parts[0].text;
             } else if (data.error) {
-                // İŞTE BURASI: Google'dan gelen gerçek hatayı ekrana basıyoruz
                 loadingMsg.textContent = "Sistem Hatası: " + data.error.message;
             } else {
                 loadingMsg.textContent = "Sanırım beynimde bir kısa devre oldu, tekrar dener misin?";
