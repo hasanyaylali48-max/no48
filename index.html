@@ -3,218 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE BOOKIE v22.0</title>
+    <title>NO:48 | THE FINAL SOURCE v23.0</title>
     <style>
         :root {
             --gold: #d4af37; --sky: #00d2ff; --red: #ff4d4d; --green: #4ade80; --purple: #a855f7;
             --bg: #05070a; --card: #111827; --text: #ffffff; --border: #1f2937; --nav: #070a10;
         }
         [data-theme="light"] { --bg: #f3f4f6; --card: #ffffff; --text: #111827; --border: #d1d5db; --nav: #ffffff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; transition: 0.3s; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', system-ui; transition: 0.2s; }
         body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 110px; overflow-x: hidden; }
         
-        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); position: sticky; top: 0; z-index: 1000; }
-        .logo-box { width: 45px; height: 45px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); cursor: pointer; }
-        .aura-status { font-size: 10px; background: rgba(0,210,255,0.1); color: var(--sky); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--sky); display: inline-block; margin-top: 8px; font-weight: 800; }
+        /* Glass UI */
+        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .logo-box { width: 50px; height: 50px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); cursor: pointer; }
+        .aura-badge { font-size: 10px; background: rgba(0,210,255,0.1); color: var(--sky); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--sky); display: inline-block; margin-top: 8px; font-weight: 900; }
 
-        .panel { display: none; padding: 15px; animation: slideUp 0.4s ease; }
+        .panel { display: none; padding: 15px; animation: slideIn 0.3s ease-out; }
         .panel.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: var(--card); border-radius: 18px; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; position: relative; }
-        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; }
-        .val { font-size: 20px; font-weight: 900; margin-top: 8px; }
+        .card { background: var(--card); border-radius: 18px; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; position: relative; overflow: hidden; }
+        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; }
+        .val { font-size: 18px; font-weight: 800; margin-top: 5px; }
 
-        /* Stadium Special UI */
-        .bet-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 5px; font-size: 13px; }
-        .odds-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
-        .payout-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--green); }
+        /* Mola System */
+        .staff-card { border-left: 5px solid var(--gold); }
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; }
+        .m-btn { padding: 10px; border: none; border-radius: 8px; font-size: 9px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; }
+        .b-yem { background: var(--gold); } .b-m1 { background: var(--sky); } .b-m2 { background: var(--purple); color: #fff; } .b-sig { background: var(--green); }
+        .b-pause { background: #374151; color: #fff; } .b-stop { background: var(--red); color: #fff; grid-column: span 2; }
+        .timer-view { font-family: monospace; font-size: 22px; color: var(--sky); font-weight: bold; margin: 5px 0; }
 
-        /* Navigation */
+        /* Tables & Logs */
+        .log-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; font-size: 11px; height: 160px; overflow-y: auto; border: 1px solid var(--border); line-height: 1.5; }
+        .log-line { border-bottom: 1px solid #222; padding: 4px 0; display: flex; gap: 8px; }
+        .log-t { color: var(--gold); font-weight: bold; }
+
+        /* Navigation (Scrollable) */
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); display: flex; overflow-x: auto; padding: 12px 5px; border-top: 1px solid var(--border); z-index: 2000; scrollbar-width: none; }
         .nav-item { min-width: 65px; text-align: center; color: #4b5563; font-size: 9px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--gold); transform: translateY(-3px); font-weight: 900; }
         .nav-item i { display: block; font-size: 18px; margin-bottom: 3px; font-style: normal; }
 
-        input, select { width: 100%; padding: 10px; margin: 5px 0; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 14px; }
-        .btn-pro { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
-        iframe { width: 100%; height: 500px; border-radius: 15px; border: none; background: #fff; }
+        input, select { width: 100%; padding: 11px; margin: 4px 0; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 13px; }
+        .btn-pro { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 900; background: var(--gold); color: #000; cursor: pointer; text-transform: uppercase; }
+        iframe { width: 100%; height: 500px; border-radius: 15px; border: none; background: #fff; margin-top: 10px; }
+
+        /* PIN Overlay */
+        #pin-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; }
     </style>
 </head>
 <body onload="init()">
+
+    <div id="pin-screen">
+        <h2 style="color:var(--gold); letter-spacing: 2px;">🔱 GOD ACCESS</h2>
+        <input type="password" id="pin-in" style="width:200px; text-align:center; font-size:28px; letter-spacing:10px;" placeholder="****">
+        <button class="btn-pro" style="width:200px; margin-top:20px;" onclick="checkPin()">GİRİŞ</button>
+    </div>
 
     <header class="header">
         <div class="logo-box" onclick="location.reload()">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8"/><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="5" fill="none"/></svg>
         </div>
-        <div class="aura-status" id="aura-chat">AURA: Hasan, Stadium Analizi Hazır.</div>
+        <div class="aura-badge" id="aura-chat">AURA: Hasan, İmparatorluk v23.0 Sürümü Yayında.</div>
     </header>
 
     <div id="p-dash" class="panel active">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="card"><h3>Kasa</h3><div class="val" id="d-bal">0 ₺</div></div>
-            <div class="card"><h3>İddaa Durum</h3><div class="val" id="d-bet" style="color:var(--green)">+0 ₺</div></div>
-            <div class="card" style="border-color:var(--sky)"><h3>GBP/₺</h3><div class="val">58.00</div></div>
-            <div class="card"><h3>Molada</h3><div class="val" id="d-mola">0 / 5</div></div>
+            <div class="card"><h3>Kasa Net</h3><div class="val" id="d-bal">0 ₺</div></div>
+            <div class="card"><h3>Mola</h3><div class="val" id="d-mola">0 / 0</div></div>
+            <div class="card" style="border-color:var(--green)"><h3>Pound Kur</h3><div class="val">58 ₺</div></div>
+            <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
         </div>
-        <div class="card"><h3>AURA Günlük Analiz</h3><p id="aura-bet-tip" style="font-size:12px; line-height:1.4;">"Hasan, bugün Premier Lig'de sürpriz kokusu var. Kuponuna dikkat et!"</p></div>
-    </div>
-
-    <div id="p-odds" class="panel">
-        <h2 style="color:var(--red)">⚽ Stadium: Bahis Üssü</h2>
-        
-        <div class="card" style="border-color:var(--gold)">
-            <h3>Kupon Oluşturucu</h3>
-            <div id="bet-list"></div>
-            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:5px; margin-top:10px;">
-                <input type="text" id="bet-match" placeholder="Maç (Örn: GS-FB)">
-                <input type="number" id="bet-odds" placeholder="Oran" step="0.01">
-            </div>
-            <button class="btn-pro" style="margin-top:5px; background:var(--sky)" onclick="addBet()">KUPONA EKLE</button>
-        </div>
-
-        <div class="card payout-card">
-            <h3>Kazanç Hesaplayıcı</h3>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;">
-                <span>Toplam Oran:</span> <b id="total-odds">1.00</b>
-            </div>
-            <input type="number" id="bet-stake" placeholder="Misli (₺)" oninput="calcPayout()" value="100">
-            <div style="display:flex; justify-content:space-between; margin-top:10px; color:var(--green); font-size:18px;">
-                <span>Tahmini Kazanç:</span> <b id="total-payout">0 ₺</b>
-            </div>
-            <button class="btn-pro" style="margin-top:10px;" onclick="saveKupon()">KUPONU MÜHÜRLE</button>
-        </div>
-
         <div class="card">
-            <h3>Canlı Skorlar & Fikstür</h3>
-            <iframe src="https://m.flashscore.com.tr/"></iframe>
+            <h3>Canlı Log Kaydı</h3>
+            <div id="dash-logs" class="log-box"></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Mağaza & Ekip</h2>
+        <h2 style="color:var(--gold)">💼 Ekip & Mola Yönetimi</h2>
         <div id="staff-container"></div>
     </div>
 
+    <div id="p-stock" class="panel">
+        <h2 style="color:var(--sky)">📦 Mağaza Stok</h2>
+        <div id="stock-list"></div>
+        <div class="card">
+            <input type="text" id="st-name" placeholder="Eksik Ürün Adı">
+            <input type="number" id="st-qty" placeholder="Adet">
+            <button class="btn-pro" onclick="addStock()">LİSTEYE EKLE</button>
+        </div>
+    </div>
+
     <div id="p-bank" class="panel">
-        <h2 style="color:var(--green)">💰 Banker: Hazine</h2>
+        <h2 style="color:var(--green)">💰 Banker & Dövizmatik</h2>
+        <div class="card" style="background:linear-gradient(45deg, #111827, #1e293b)">
+            <h3>Hesap Makinesi (2026 Kur)</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="number" id="calc-v" placeholder="Miktar" oninput="calc()">
+                <select id="calc-t" onchange="calc()"><option value="gbp">GBP (£) 58₺</option><option value="eur">EUR (€) 50₺</option><option value="usd">USD ($) 42₺</option></select>
+            </div>
+            <div id="calc-r" style="font-size:24px; font-weight:900; color:var(--green); margin-top:10px;">0.00 ₺</div>
+        </div>
         <div id="exp-list"></div>
         <div class="card">
-            <input type="text" id="e-n" placeholder="Açıklama">
+            <input type="text" id="e-n" placeholder="Harcama/Ciro Adı">
             <input type="number" id="e-a" placeholder="Tutar (₺)">
             <select id="e-t"><option value="rev">Ciro (+)</option><option value="exp">Gider (-)</option></select>
             <button class="btn-pro" onclick="addFin()">İŞLE</button>
         </div>
     </div>
 
+    <div id="p-radar" class="panel">
+        <h2 style="color:var(--gold)">🛰️ Marmaris Radar</h2>
+        <div class="card" style="border-left:5px solid var(--sky)">
+            <h3>Cruise Takvimi</h3>
+            <p>🚢 20 Nis: AIDAstella | 🚢 28 Nis: MSC Divina</p>
+        </div>
+        <div class="card">
+            <h3>Şehir Bilgisi</h3>
+            <p>Hava: 19°C ☀️ | Nöbetçi: Sultan Eczanesi</p>
+        </div>
+    </header>
+
+    <div id="p-odds" class="panel">
+        <h2 style="color:var(--red)">⚽ Stadium</h2>
+        <div class="card">
+            <h3>Bahis Hesaplayıcı</h3>
+            <input type="number" id="o-val" placeholder="Toplam Oran" oninput="calcBet()">
+            <input type="number" id="o-mis" placeholder="Misli" oninput="calcBet()" value="100">
+            <div id="o-res" style="font-size:20px; font-weight:900; color:var(--green); margin-top:10px;">0 ₺ Kazanç</div>
+        </div>
+        <iframe src="https://m.flashscore.com.tr/"></iframe>
+    </div>
+
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div id="begum-list"></div>
-        <input type="text" id="b-note" placeholder="Not...">
-        <button class="btn-pro" style="background:var(--sky)" onclick="addBegum()">KAYDET</button>
-    </div>
-
-    <div id="p-radar" class="panel">
-        <h2 style="color:var(--gold)">🛰️ Marmaris Radar</h2>
-        <div class="card">
-            <h3>Gemi & Hava</h3>
-            <p>🚢 28 Nis: MSC Divina (4.000 Yolcu)<br>☀️ Marmaris: 19°C | Sultan Eczanesi</p>
-        </div>
+        <input type="text" id="b-note" placeholder="Not yaz...">
+        <button class="btn-pro" style="background:var(--sky)" onclick="addBeg()">KAYDET</button>
     </div>
 
     <div id="p-god" class="panel">
         <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
-            <input type="number" id="g-sal" placeholder="Maaş (₺)">
-            <button class="btn-pro" onclick="db.salary = document.getElementById('g-sal').value; save();">GÜNCELLE</button>
+            <h3>Panel Yönetimi</h3>
+            <div id="p-ctrl" style="display:grid; grid-template-columns:1fr 1fr; gap:5px; font-size:11px;"></div>
         </div>
-        <button class="btn-pro" style="background:#444; color:#fff; margin-top:20px;" onclick="wipe()">SİSTEMİ SIFIRLA</button>
+        <div class="card">
+            <h3>Kur & Maaş Ayarları</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px;">
+                <input type="number" id="k-gbp" placeholder="GBP">
+                <input type="number" id="k-eur" placeholder="EUR">
+                <input type="number" id="k-usd" placeholder="USD">
+            </div>
+            <input type="number" id="g-sal" placeholder="Maaş (52000)">
+            <button class="btn-pro" style="margin-top:10px;" onclick="saveGod()">MÜHÜRLE</button>
+        </div>
+        <div class="card">
+            <input type="text" id="p-n" placeholder="Yeni Personel Adı">
+            <button class="btn-pro" style="background:var(--sky)" onclick="addSt()">EKİBE EKLE</button>
+        </div>
+        <button class="btn-pro" style="background:#444; color:#fff; margin-top:15px;" onclick="wipe()">KIYAMET (SIFIRLA)</button>
     </div>
 
-    <nav class="nav-bar" id="nav-container"></nav>
+    <nav class="nav-bar" id="nav-c"></nav>
 
     <script>
-        const DB_KEY = 'NO48_BOOKIE_SYSTEM';
+        const DB_KEY = 'NO48_MASTER_FINAL_2026';
         const initialStaff = [
-            {name: "Hasan Yaylalı", active: null}, {name: "Öznur Balım", active: null},
-            {name: "Gamze Yılmaz", active: null}, {name: "Nermin Şensezer", active: null},
-            {name: "Nazan Irgın", active: null}
+            {name: "Hasan Yaylalı", active: null, task: ""}, {name: "Öznur Balım", active: null, task: ""},
+            {name: "Gamze Yılmaz", active: null, task: ""}, {name: "Nermin Şensezer", active: null, task: ""},
+            {name: "Nazan Irgın", active: null, task: ""}
         ];
 
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            salary: 52000, staff: initialStaff, expenses: [], revenue: [], 
-            begum: [], currentKupon: [], kuponProfit: 0,
-            panels: {dash:true, odds:true, store:true, bank:true, begum:true, radar:true, god:true}
+            salary: 52000, pin: "1234", staff: initialStaff,
+            expenses: [], revenue: [], begum: [], logs: [], stock: [],
+            kurlar: {gbp: 58, eur: 50, usd: 42},
+            panels: {dash:true, store:true, stock:true, bank:true, radar:true, odds:true, begum:true, god:true}
         };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
         function init() { render(); setInterval(render, 1000); }
 
         function nav(id, el) {
+            if(id === 'p-god') { document.getElementById('pin-screen').style.display = 'flex'; return; }
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
         }
 
-        // Stadium Logic
-        function addBet() {
-            let m = document.getElementById('bet-match').value;
-            let o = parseFloat(document.getElementById('bet-odds').value);
-            if(m && o) { db.currentKupon.push({m, o}); save(); document.getElementById('bet-match').value=''; document.getElementById('bet-odds').value=''; }
+        function checkPin() {
+            if(document.getElementById('pin-in').value === db.pin) {
+                document.getElementById('pin-screen').style.display = 'none';
+                document.getElementById('pin-in').value = '';
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('p-god').classList.add('active');
+            } else { alert("HATALI PIN!"); }
         }
 
-        function calcPayout() {
-            let totalOdds = db.currentKupon.reduce((acc, curr) => acc * curr.o, 1);
-            let stake = parseFloat(document.getElementById('bet-stake').value) || 0;
-            document.getElementById('total-odds').innerText = totalOdds.toFixed(2);
-            document.getElementById('total-payout').innerText = (totalOdds * stake).toLocaleString() + " ₺";
+        function log(msg) {
+            const time = new Date().toLocaleTimeString('tr-TR');
+            db.logs.unshift({time, msg}); if(db.logs.length > 50) db.logs.pop();
+            save();
         }
 
-        function saveKupon() {
-            let totalOdds = db.currentKupon.reduce((acc, curr) => acc * curr.o, 1);
-            let stake = parseFloat(document.getElementById('bet-stake').value) || 0;
-            let payout = totalOdds * stake;
-            if(confirm(`Kupon mühürlendi. Potansiyel kazanç: ${payout.toFixed(2)} ₺. Maçlar bittiğinde ciroya eklemeyi unutma!`)) {
-                db.currentKupon = []; save();
-            }
+        // Mola Motoru v4.0
+        function startM(idx, type, mins) {
+            let s = db.staff[idx]; if(s.active) return alert("Zaten molada!");
+            s.active = { type, start: Date.now(), totalPaused: 0, limit: mins * 60000, status: 'running' };
+            log(`${s.name} - ${type} BAŞLADI`);
+        }
+        function pauseM(idx) {
+            let s = db.staff[idx].active; if(!s) return;
+            if(s.status === 'running') { s.status = 'paused'; s.lastPausedAt = Date.now(); log(`${db.staff[idx].name} Durduruldu`); }
+            else { s.status = 'running'; s.totalPaused += (Date.now() - s.lastPausedAt); log(`${db.staff[idx].name} Devam`); }
+            save();
+        }
+        function stopM(idx) {
+            let s = db.staff[idx]; if(!s.active) return;
+            log(`${s.name} ${s.active.type} BİTİRDİ`); s.active = null; save();
         }
 
         function render() {
-            // Dashboard
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
             let rev = db.revenue.reduce((a,b) => a+b.amt, 0);
             let exp = db.expenses.reduce((a,b) => a+b.amt, 0);
-            document.getElementById('d-bal').innerText = (db.salary + rev - exp).toLocaleString() + " ₺";
-            document.getElementById('d-bet').innerText = (db.kuponProfit >= 0 ? "+" : "") + db.kuponProfit + " ₺";
+            let total = db.salary + rev - exp;
+            document.getElementById('d-bal').innerText = total.toLocaleString() + " ₺";
 
-            // Nav Bar
-            let navH = '';
-            const icons = {dash:'🏠', odds:'⚽', store:'💼', bank:'💰', begum:'💎', radar:'🛰️', god:'⚡'};
+            // Nav Bar & Panel Ctrl
+            let navH = ''; let ctrlH = '';
+            const icons = {dash:'🏠', store:'💼', stock:'📦', bank:'💰', radar:'🛰️', odds:'⚽', begum:'💎', god:'⚡'};
+            const labs = {dash:'Dash', store:'Mola', stock:'Stok', bank:'Banker', radar:'Radar', odds:'Stadium', begum:'Begüm', god:'Tanrı'};
             for(let p in db.panels) {
-                navH += `<div class="nav-item ${document.getElementById('p-'+p).classList.contains('active')?'active':''}" onclick="nav('p-${p}', this)"><i>${icons[p]}</i>${p}</div>`;
+                if(db.panels[p]) navH += `<div class="nav-item ${document.getElementById('p-'+p).classList.contains('active')?'active':''}" onclick="nav('p-${p}', this)"><i>${icons[p]}</i>${labs[p]}</div>`;
+                ctrlH += `<div><input type="checkbox" ${db.panels[p]?'checked':''} onchange="db.panels['${p}']=!db.panels['${p}']; save();"> ${labs[p]}</div>`;
             }
-            document.getElementById('nav-container').innerHTML = navH;
+            document.getElementById('nav-c').innerHTML = navH;
+            document.getElementById('p-ctrl').innerHTML = ctrlH;
 
-            // Kupon List
-            document.getElementById('bet-list').innerHTML = db.currentKupon.map((b, i) => `
-                <div class="bet-row">
-                    <span>${b.m}</span>
-                    <span class="odds-badge">${b.o}</span>
-                    <span onclick="db.currentKupon.splice(${i},1); save();" style="color:var(--red)">×</span>
-                </div>`).join('');
-            calcPayout();
+            // Staff & Timer Rendering
+            let onM = 0;
+            document.getElementById('staff-container').innerHTML = db.staff.map((s, i) => {
+                let timer = '';
+                if(s.active) {
+                    onM++;
+                    let elapsed = (s.active.status==='running'?Date.now():s.active.lastPausedAt) - s.active.start - s.active.totalPaused;
+                    let display = "";
+                    if(s.active.limit > 0) {
+                        let rem = s.active.limit - elapsed;
+                        let m = Math.floor(Math.abs(rem)/60000); let sec = Math.floor((Math.abs(rem)%60000)/1000);
+                        display = (rem < 0 ? "-" : "") + `${m}:${sec<10?'0':''}${sec}`;
+                    } else {
+                        let m = Math.floor(elapsed/60000); let sec = Math.floor((elapsed%60000)/1000);
+                        display = `${m}:${sec<10?'0':''}${sec}`;
+                    }
+                    timer = `<div class="timer-view" style="color:${s.active.status==='paused'?'var(--gold)':''}">${s.active.type}: ${display}</div>`;
+                }
+                return `<div class="card staff-card">
+                    <div style="display:flex; justify-content:space-between"><b>${s.name}</b><span onclick="delSt(${i})" style="color:red; font-size:9px">SİL</span></div>
+                    <input type="text" placeholder="Görev..." value="${s.task||''}" onchange="db.staff[${i}].task=this.value; save();" style="font-size:11px; margin:5px 0;">
+                    ${timer}
+                    <div class="btn-grid">
+                        <button class="m-btn b-yem" onclick="startM(${i},'Yemek',60)">Yemek</button>
+                        <button class="m-btn b-m1" onclick="startM(${i},'Mola 1',30)">Mola 1</button>
+                        <button class="m-btn b-m2" onclick="startM(${i},'Mola 2',30)">Mola 2</button>
+                        <button class="m-btn b-sig" onclick="startM(${i},'Sigara',0)">Sigara</button>
+                        ${s.active ? `<button class="m-btn b-pause" onclick="pauseM(${i})">${s.active.status==='paused'?'DEVAM':'DURDUR'}</button>` : ''}
+                        ${s.active ? `<button class="m-btn b-stop" onclick="stopM(${i})">BİTİR</button>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            document.getElementById('d-mola').innerText = `${onM} / ${db.staff.length}`;
 
-            // Staff & Others
-            document.getElementById('staff-container').innerHTML = db.staff.map(s => `<div class="card staff-card"><b>${s.name}</b><br><small>Müsait</small></div>`).join('');
-            document.getElementById('begum-list').innerHTML = db.begum.map(n => `<div class="card" style="border-left:3px solid var(--sky)">${n}</div>`).join('');
+            // Stok, Logs, Begüm
+            document.getElementById('stock-list').innerHTML = db.stock.map((st, i) => `<div class="card" style="border-left:4px solid var(--sky)">${st.name} (${st.q} Adet) <span onclick="db.stock.splice(${i},1); save();" style="float:right; color:red">×</span></div>`).join('');
+            document.getElementById('dash-logs').innerHTML = db.logs.map(l => `<div class="log-line"><span class="log-t">${l.time}</span> ${l.msg}</div>`).join('');
+            document.getElementById('begum-list').innerHTML = db.begum.map((n, i) => `<div class="card" style="border-left:4px solid var(--sky)">${n} <span onclick="db.begum.splice(${i},1); save();" style="float:right">✓</span></div>`).join('');
+            document.getElementById('exp-list').innerHTML = [...db.revenue, ...db.expenses].reverse().slice(0,5).map(e => `<div class="card" style="font-size:11px;">${e.name}: ${e.amt} ₺</div>`).join('');
         }
 
-        function addFin() {
-            let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value;
-            if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); }
+        // --- GLOBAL ACTIONS ---
+        function calc() { let v = document.getElementById('calc-v').value; let t = document.getElementById('calc-t').value; document.getElementById('calc-r').innerText = (v * db.kurlar[t]).toLocaleString() + " ₺"; }
+        function calcBet() { let o = document.getElementById('o-val').value; let m = document.getElementById('o-mis').value; document.getElementById('o-res').innerText = (o * m).toLocaleString() + " ₺ Kazanç"; }
+        function addStock() { let n = document.getElementById('st-name').value; let q = document.getElementById('st-qty').value; if(n && q){ db.stock.push({name:n, q:q}); save(); document.getElementById('st-name').value=''; document.getElementById('st-qty').value=''; } }
+        function addFin() { let n = document.getElementById('e-n').value; let a = Number(document.getElementById('e-a').value); let t = document.getElementById('e-t').value; if(n && a) { if(t==='rev') db.revenue.push({name:n, amt:a}); else db.expenses.push({name:n, amt:a}); save(); document.getElementById('e-n').value=''; document.getElementById('e-a').value=''; } }
+        function addBeg() { let n = document.getElementById('b-note').value; if(n){db.begum.push(n); save(); document.getElementById('b-note').value='';} }
+        function addSt() { let n = document.getElementById('p-n').value; if(n){db.staff.push({name:n, active:null, task:''}); save(); document.getElementById('p-n').value='';} }
+        function saveGod() { 
+            db.kurlar.gbp = document.getElementById('k-gbp').value || db.kurlar.gbp;
+            db.kurlar.eur = document.getElementById('k-eur').value || db.kurlar.eur;
+            db.kurlar.usd = document.getElementById('k-usd').value || db.kurlar.usd;
+            db.salary = Number(document.getElementById('g-sal').value) || db.salary;
+            save(); alert("Ayarlar Mühürlendi.");
         }
-        function addBegum() { let n = document.getElementById('b-note').value; if(n){db.begum.push(n); save(); document.getElementById('b-note').value='';} }
-        function wipe() { if(confirm("Sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
+        function delSt(i) { if(confirm("Personel Silinsin mi?")){db.staff.splice(i,1); save();} }
+        function wipe() { if(confirm("Tüm sistem silinecek!")){localStorage.clear(); location.reload();} }
     </script>
 </body>
 </html>
