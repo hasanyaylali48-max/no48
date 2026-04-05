@@ -3,44 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE ULTIMATE BEAST v8.0</title>
+    <title>NO:48 | THE BEAST v9.0</title>
     <style>
         :root { --bg: #05070a; --card: #10141d; --gold: #d4af37; --sky: #00d2ff; --text: #ffffff; --red: #ff4d4d; --green: #4ade80; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        /* Premium Header */
         .header { text-align: center; padding: 25px; background: linear-gradient(to bottom, #10141d, transparent); border-bottom: 1px solid #1f2937; }
-        .logo-svg { width: 70px; height: 70px; filter: drop-shadow(0 0 10px var(--gold)); }
-        .aura-box { font-size: 11px; color: var(--sky); background: rgba(0,210,255,0.05); padding: 12px; border-radius: 15px; margin: 10px 20px; border: 1px dashed var(--sky); line-height: 1.4; }
+        .logo-svg { width: 60px; height: 60px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .aura-box { font-size: 11px; color: var(--sky); background: rgba(0,210,255,0.05); padding: 12px; border-radius: 15px; margin: 10px 15px; border: 1px dashed var(--sky); line-height: 1.4; text-align: center; }
 
-        /* Navigation & Panels */
         .panel { display: none; padding: 20px; animation: slideUp 0.3s ease-out; }
         .panel.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dashboard & Cards */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid #1f2937; position: relative; overflow: hidden; }
         .card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--gold); }
         .card h3 { margin: 0; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
-        .val { font-size: 20px; font-weight: 800; margin-top: 8px; }
+        .val { font-size: 18px; font-weight: 800; margin-top: 8px; }
 
-        /* List Items */
         .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #161e2d; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
         .btn-mola { background: var(--green); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 11px; }
         .btn-mola.active { background: var(--red); color: white; }
 
-        /* Bottom Nav (Scrollable) */
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 15px 5px; border-top: 1px solid #1f2937; z-index: 1000; scrollbar-width: none; }
         .nav-item { min-width: 85px; text-align: center; color: #444; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--gold); transform: translateY(-5px); }
         .nav-item i { display: block; font-size: 22px; margin-bottom: 5px; font-style: normal; }
 
-        /* Inputs & Buttons */
-        input { width: 100%; padding: 14px; margin: 10px 0; background: #161e2d; border: 1px solid #2d3748; color: white; border-radius: 12px; outline: none; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #161e2d; border: 1px solid #2d3748; color: white; border-radius: 12px; outline: none; }
         .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; background: var(--gold); color: #000; }
-        
         iframe { width: 100%; height: 500px; border: none; border-radius: 20px; background: white; margin-top: 10px; }
     </style>
 </head>
@@ -51,18 +44,17 @@
             <circle cx="50" cy="35" r="20" fill="#FFD700" opacity="0.8" />
             <path d="M10 75 Q50 60 90 75" fill="#38BDF8" />
             <path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="#D4AF37" />
-            <circle cx="50" cy="62" r="6" fill="white" />
         </svg>
         <h1 id="app-title" style="color:var(--gold); margin:5px 0; letter-spacing: 3px;">NO:48</h1>
-        <div class="aura-box" id="aura-msg">AURA: Hasan, Marmaris Radarı aktif, tüm veriler senkronize.</div>
+        <div class="aura-box" id="aura-msg">AURA: Hasan, bütçeni analiz ediyorum...</div>
     </div>
 
     <div id="p-dash" class="panel active">
         <div class="grid">
             <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
-            <div class="card" style="border-color:var(--sky)"><h3>Radar</h3><div class="val" style="font-size:14px;">Gemi Beklenmiyor</div></div>
-            <div class="card" style="border-color:var(--green)"><h3>Mola</h3><div class="val"><span id="mola-count">0</span> / <span id="staff-total">0</span></div></div>
-            <div class="card"><h3>Maaş</h3><div class="val" id="salary-val">52,000 ₺</div></div>
+            <div class="card" style="border-color:var(--green)"><h3>Kalan Bütçe</h3><div class="val" id="dash-balance">0 ₺</div></div>
+            <div class="card" style="border-color:var(--sky)"><h3>Ekip Mola</h3><div class="val"><span id="mola-count">0</span> / <span id="staff-total">0</span></div></div>
+            <div class="card"><h3>Gemi Radar</h3><div class="val" style="font-size:14px;">20 Nis Bekleniyor</div></div>
         </div>
     </div>
 
@@ -87,31 +79,29 @@
         <h2 style="color:var(--gold)">🛰️ Marmaris Radar</h2>
         <div class="card" style="border-color:var(--sky)">
             <h3>Gemi Takvimi</h3>
-            <p style="font-size:13px;">🚢 20 Nisan: AIDAstella (08:00)</p>
-            <p style="font-size:13px;">🚢 28 Nisan: MSC Divina (07:00)</p>
+            <p style="font-size:13px;">🚢 20 Nisan: AIDAstella</p>
+            <p style="font-size:13px;">🚢 28 Nisan: MSC Divina</p>
         </div>
         <div class="card">
-            <h3>Hava & Deniz</h3>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:24px;">☀️ 18°C</span>
-                <span style="font-size:12px; color:var(--sky);">💨 14 km/s SE</span>
-            </div>
-            <p style="font-size:11px; margin-top:10px; color:#aaa;">Yarın yağmur ihtimali yüksek!</p>
-        </div>
-        <div class="card" style="border-color:var(--red)">
             <h3>Nöbetçi Eczane</h3>
-            <p style="font-size:13px; font-weight:bold;">Sultan Eczanesi</p>
-            <p style="font-size:11px;">Marmaris Merkez</p>
+            <p style="font-weight:bold;">Sultan Eczanesi</p>
+            <p style="font-size:12px;">Marmaris Merkez</p>
         </div>
     </div>
 
     <div id="p-bank" class="panel">
-        <h2 style="color:var(--green)">💰 Finans Merkezi</h2>
+        <h2 style="color:var(--green)">💰 Banker: Kasa</h2>
+        <div class="card" style="margin-bottom:15px;">
+            <h3>Bütçe Özeti</h3>
+            <div style="font-size:24px; font-weight:800;" id="bank-balance">0 ₺</div>
+            <p style="font-size:12px; color:#aaa;" id="salary-info">Maaş: 52,000 ₺</p>
+        </div>
+        <div id="expense-list"></div>
         <div class="card">
-            <h3>Kurlar</h3>
-            <p>🇺🇸 USD: 32.45 ₺</p>
-            <p>🇪🇺 EUR: 35.12 ₺</p>
-            <p>🇬🇧 GBP: 41.25 ₺</p>
+            <h3>Gider Ekle</h3>
+            <input type="text" id="expense-name" placeholder="Harcama Adı (Kira, Yemek...)">
+            <input type="number" id="expense-amt" placeholder="Miktar (₺)">
+            <button class="btn-main" onclick="addExpense()">Gideri İşle</button>
         </div>
     </div>
 
@@ -140,7 +130,7 @@
 
     <script>
         const DB_KEY = 'NO48_MASTER_DATABASE';
-        let db = JSON.parse(localStorage.getItem(DB_KEY)) || { name: "NO:48", salary: 52000, staff: [], begum: [] };
+        let db = JSON.parse(localStorage.getItem(DB_KEY)) || { name: "NO:48", salary: 52000, staff: [], begum: [], expenses: [] };
 
         function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
         function nav(id, el) {
@@ -152,8 +142,8 @@
         }
         function updateGod() {
             db.name = document.getElementById('set-name').value || db.name;
-            db.salary = document.getElementById('set-salary').value || db.salary;
-            save(); alert("Tanrı buyruğu işlendi.");
+            db.salary = Number(document.getElementById('set-salary').value) || db.salary;
+            save(); alert("Sistem güncellendi.");
         }
         function createStaff() {
             let n = document.getElementById('set-staff').value;
@@ -163,12 +153,23 @@
             let val = document.getElementById(key+'-input').value;
             if(val) { db[key].push(val); save(); document.getElementById(key+'-input').value=''; }
         }
+        function addExpense() {
+            let n = document.getElementById('expense-name').value;
+            let a = Number(document.getElementById('expense-amt').value);
+            if(n && a) { db.expenses.push({name: n, amt: a, date: new Date().toLocaleDateString()}); save(); document.getElementById('expense-name').value=''; document.getElementById('expense-amt').value=''; }
+        }
         function toggleMola(i) { db.staff[i].mola = !db.staff[i].mola; save(); }
         function remove(key, i) { db[key].splice(i, 1); save(); }
 
         function render() {
             document.getElementById('app-title').innerText = db.name;
-            document.getElementById('salary-val').innerText = Number(db.salary).toLocaleString() + " ₺";
+            document.getElementById('salary-info').innerText = "Maaş: " + db.salary.toLocaleString() + " ₺";
+            
+            let totalExp = db.expenses.reduce((sum, e) => sum + e.amt, 0);
+            let balance = db.salary - totalExp;
+            document.getElementById('dash-balance').innerText = balance.toLocaleString() + " ₺";
+            document.getElementById('bank-balance').innerText = balance.toLocaleString() + " ₺";
+
             document.getElementById('staff-total').innerText = db.staff.length;
             let onMola = db.staff.filter(s => s.mola).length;
             document.getElementById('mola-count').innerText = onMola;
@@ -181,14 +182,22 @@
                 <div class="item-row" style="border-color:var(--sky)"><span>${n}</span><span onclick="remove('begum',${i})">✓</span></div>
             `).join('');
 
-            document.getElementById('aura-msg').innerText = onMola > 2 ? "AURA: Mağaza yoğunlaşabilir, personelleri takip et!" : "AURA: Her şey kontrolümde Hasan.";
+            document.getElementById('expense-list').innerHTML = db.expenses.map((e, i) => `
+                <div class="item-row" style="border-color:var(--red)"><span>${e.name} (${e.date})</span><span>${e.amt.toLocaleString()} ₺ <button onclick="remove('expenses',${i})" style="color:red; background:none; border:none; margin-left:10px;">×</button></span></div>
+            `).join('');
+
+            // AURA ANALİZİ
+            if(balance < (db.salary * 0.2)) {
+                document.getElementById('aura-msg').innerText = "AURA: Hasan, bütçen kritik seviyede! Harcamaları hemen kesmelisin.";
+            } else if (onMola > 2) {
+                document.getElementById('aura-msg').innerText = "AURA: Mağaza yoğunlaşabilir, ekibi takipteyim.";
+            } else {
+                document.getElementById('aura-msg').innerText = "AURA: Bütçen sağlıklı, Marmaris'in tadını çıkar.";
+            }
         }
 
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-        }, 1000);
-
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}); }, 1000);
         render();
     </script>
 </body>
-    </html>
+</html>
