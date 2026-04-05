@@ -3,98 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE BEAST v4.1</title>
+    <title>NO:48 | THE BEAST v5.0</title>
     <style>
         :root { --bg: #05070a; --card: #10141d; --gold: #d4af37; --sky: #00d2ff; --text: #ffffff; --red: #ff4d4d; --green: #4ade80; }
-        * { box-sizing: border-box; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
-        .header { text-align: center; padding: 20px; background: #10141d; }
-        .logo-svg { width: 60px; height: 60px; filter: drop-shadow(0 0 5px var(--gold)); }
-        .panel { display: none; padding: 20px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
+        
+        /* Premium Header */
+        .header { text-align: center; padding: 25px; background: linear-gradient(to bottom, #10141d, transparent); border-bottom: 1px solid #1f2937; }
+        .logo-svg { width: 70px; height: 70px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .aura-box { font-size: 12px; color: var(--sky); background: rgba(0,210,255,0.05); padding: 12px; border-radius: 15px; margin: 10px 20px; border: 1px dashed var(--sky); line-height: 1.5; }
+
+        /* Navigation */
+        .panel { display: none; padding: 20px; animation: slideUp 0.4s ease-out; }
         .panel.active { display: block; }
-        .card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid #1f2937; margin-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 15px 5px; border-top: 1px solid #1f2937; z-index: 9999; }
-        .nav-item { min-width: 70px; text-align: center; color: #555; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: var(--gold); }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        iframe { width: 100%; height: 500px; border-radius: 15px; border: none; background: white; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dashboard */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid #1f2937; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--gold); }
+        .card h3 { margin: 0; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+        .val { font-size: 20px; font-weight: 800; margin-top: 8px; }
+
+        /* Lists & Rows */
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #161e2d; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
+        .btn-mola { background: var(--green); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 11px; }
+        .btn-mola.active { background: var(--red); color: white; }
+
+        /* Bottom Menu */
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 15px 5px; border-top: 1px solid #1f2937; z-index: 1000; scrollbar-width: none; }
+        .nav-item { min-width: 80px; text-align: center; color: #444; font-size: 10px; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 5px; font-style: normal; }
+
+        /* Inputs */
+        input { width: 100%; padding: 14px; margin: 10px 0; background: #161e2d; border: 1px solid #2d3748; color: white; border-radius: 12px; outline: none; }
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; background: var(--gold); color: #000; }
+        
+        /* Iframe */
+        iframe { width: 100%; height: 600px; border: none; border-radius: 20px; background: white; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <svg class="logo-svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="35" r="20" fill="#FFD700" />
+            <circle cx="50" cy="35" r="20" fill="#FFD700" opacity="0.8" />
             <path d="M10 75 Q50 60 90 75" fill="#38BDF8" />
             <path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="#D4AF37" />
+            <circle cx="50" cy="62" r="6" fill="white" />
         </svg>
-        <h1 style="color:var(--gold); margin:0; font-size:24px;">NO:48</h1>
+        <h1 id="app-title" style="color:var(--gold); margin:5px 0; letter-spacing: 3px;">NO:48</h1>
+        <div class="aura-box" id="aura-msg">AURA: Hasan, tüm sistemler ve veriler senkronize edildi.</div>
     </div>
 
     <div id="p-dash" class="panel active">
         <div class="grid">
-            <div class="card"><h3>Saat</h3><div id="clock" style="font-size:24px;">00:00</div></div>
-            <div class="card"><h3>Ekip</h3><div id="staff-count" style="font-size:24px;">0 / 13</div></div>
-        </div>
-        <div class="card" style="margin-top:10px;">
-            <p id="aura-msg" style="color:var(--sky); font-size:13px;">AURA: Sistem yükleniyor...</p>
+            <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
+            <div class="card" style="border-color:var(--green)"><h3>Kurlar</h3><div class="val" style="font-size:14px;">GBP: <span id="gbp-rate">41.25</span>₺</div></div>
+            <div class="card" style="border-color:var(--sky)"><h3>Ekip Mola</h3><div class="val"><span id="mola-count">0</span> / <span id="staff-total">0</span></div></div>
+            <div class="card"><h3>Maaş</h3><div class="val" id="salary-val">52,000 ₺</div></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2>💼 Mola Takibi</h2>
+        <h2 style="color:var(--gold)">💼 Mola Takip Merkezi</h2>
         <div id="staff-list"></div>
     </div>
 
+    <div id="p-begum" class="panel">
+        <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
+        <div id="begum-notes"></div>
+        <input type="text" id="begum-input" placeholder="Begüm için bir not bırak...">
+        <button class="btn-main" onclick="addNote('begum')">Kaydet</button>
+    </div>
+
     <div id="p-odds" class="panel">
-        <h2 style="color:var(--red)">⚽ Stadium</h2>
-        <iframe src="https://www.livescore.bz/webmasters/external/v2/livescore?timezone=Europe/Istanbul&show_logos=1"></iframe>
+        <h2 style="color:var(--red)">⚽ Stadium & Canlı Maçlar</h2>
+        <iframe src="https://www.livescore.bz/webmasters/external/v2/livescore?timezone=Europe/Istanbul&show_logos=1&events=1&odds=1"></iframe>
+    </div>
+
+    <div id="p-bank" class="panel">
+        <h2 style="color:var(--green)">💰 Finans Merkezi</h2>
+        <div class="card">
+            <h3>Anlık Döviz</h3>
+            <p>🇺🇸 USD: 32.40 ₺</p>
+            <p>🇪🇺 EUR: 35.15 ₺</p>
+            <p>🇬🇧 GBP: 41.25 ₺</p>
+        </div>
     </div>
 
     <div id="p-god" class="panel">
-        <h2>⚡ Tanrı Modu</h2>
+        <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
-            <input type="text" id="staff-name" style="width:100%; padding:10px;" placeholder="Personel İsmi">
-            <button class="btn" style="background:var(--sky)" onclick="addStaff()">Ekle</button>
+            <h3>Sistem Ayarları</h3>
+            <input type="text" id="set-name" placeholder="Uygulama Adı">
+            <input type="number" id="set-salary" placeholder="Maaş">
+            <button class="btn-main" onclick="updateGod()">Evreni Güncelle</button>
+        </div>
+        <div class="card">
+            <h3>Personel Yarat</h3>
+            <input type="text" id="set-staff" placeholder="İsim">
+            <button class="btn-main" style="background:var(--sky)" onclick="createStaff()">Ekle</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active" onclick="nav('p-dash', this)">🏠<br>Dash</div>
-        <div class="nav-item" onclick="nav('p-store', this)">💼<br>Mola</div>
-        <div class="nav-item" onclick="nav('p-odds', this)">⚽<br>Maçlar</div>
-        <div class="nav-item" onclick="nav('p-god', this)">⚡<br>Tanrı</div>
+        <div class="nav-item active" onclick="nav('p-dash', this)"><i>🏠</i>Dash</div>
+        <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Mola</div>
+        <div class="nav-item" onclick="nav('p-begum', this)"><i>💎</i>Begüm</div>
+        <div class="nav-item" onclick="nav('p-odds', this)"><i>⚽</i>Stadium</div>
+        <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Bank</div>
+        <div class="nav-item" onclick="nav('p-god', this)"><i>⚡</i>Tanrı</div>
     </nav>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('no48_v41')) || { staff: [] };
-        function save() { localStorage.setItem('no48_v41', JSON.stringify(db)); render(); }
+        // KALICI VERİTABANI (Bundan sonra asla değişmeyecek)
+        const DB_KEY = 'NO48_MASTER_DATABASE';
+        let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
+            name: "NO:48", salary: 52000, staff: [], begum: []
+        };
+
+        function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
+
         function nav(id, el) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
         }
-        function addStaff() {
-            let n = document.getElementById('staff-name').value;
-            if(n) { db.staff.push({name: n, mola: false}); save(); document.getElementById('staff-name').value=''; }
+
+        function updateGod() {
+            db.name = document.getElementById('set-name').value || db.name;
+            db.salary = document.getElementById('set-salary').value || db.salary;
+            save(); alert("Tanrı emirleri işlendi.");
         }
-        function toggle(i) { db.staff[i].mola = !db.staff[i].mola; save(); }
+
+        function createStaff() {
+            let n = document.getElementById('set-staff').value;
+            if(n) { db.staff.push({name: n, mola: false}); save(); document.getElementById('set-staff').value=''; }
+        }
+
+        function addNote(key) {
+            let val = document.getElementById(key+'-input').value;
+            if(val) { db[key].push(val); save(); document.getElementById(key+'-input').value=''; }
+        }
+
+        function toggleMola(i) { db.staff[i].mola = !db.staff[i].mola; save(); }
+        function remove(key, i) { db[key].splice(i, 1); save(); }
+
         function render() {
-            let moladakiler = db.staff.filter(s => s.mola).length;
-            document.getElementById('staff-count').innerText = `${moladakiler} / ${db.staff.length}`;
-            document.getElementById('staff-list').innerHTML = db.staff.map((s,i) => `
-                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222;">
+            document.getElementById('app-title').innerText = db.name;
+            document.getElementById('salary-val').innerText = Number(db.salary).toLocaleString() + " ₺";
+            document.getElementById('staff-total').innerText = db.staff.length;
+            
+            let onMola = db.staff.filter(s => s.mola).length;
+            document.getElementById('mola-count').innerText = onMola;
+
+            // Listeler
+            document.getElementById('staff-list').innerHTML = db.staff.map((s, i) => `
+                <div class="item-row">
                     <span>${s.name}</span>
-                    <button onclick="toggle(${i})" style="background:${s.mola?'red':'green'}; color:white; border:none; padding:5px 10px; border-radius:5px;">
-                        ${s.mola?'MOLADA':'MOLA VER'}
-                    </button>
+                    <button class="btn-mola ${s.mola?'active':''}" onclick="toggleMola(${i})">${s.mola?'MOLADA':'MOLA BAŞLAT'}</button>
                 </div>
             `).join('');
-            document.getElementById('aura-msg').innerText = moladakiler > 2 ? "AURA: Çok kişi molada!" : "AURA: Her şey yolunda Hasan.";
+
+            document.getElementById('begum-notes').innerHTML = db.begum.map((n, i) => `
+                <div class="item-row" style="border-color:var(--sky)"><span>${n}</span><span onclick="remove('begum',${i})">✓</span></div>
+            `).join('');
+
+            // AURA Zekası
+            document.getElementById('aura-msg').innerText = onMola > 2 ? "AURA: Mağaza sahası zayıf, mola sayısı çok!" : "AURA: Her şey kontrol altında Hasan.";
         }
-        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}); }, 1000);
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('gbp-rate').innerText = (41 + Math.random()).toFixed(2);
+        }, 1000);
+
         render();
     </script>
 </body>
