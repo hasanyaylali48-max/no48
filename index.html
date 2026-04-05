@@ -3,264 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE EMPEROR v10.0</title>
+    <title>NO:48 | THE COMMANDER v12.0</title>
     <style>
         :root {
             --gold: #d4af37; --sky: #00d2ff; --red: #ff4d4d; --green: #4ade80;
-            /* Dark Theme Vars */
             --bg: #05070a; --card: #111827; --text: #ffffff; --border: #1f2937; --nav: #070a10;
         }
         [data-theme="light"] {
             --bg: #f3f4f6; --card: #ffffff; --text: #111827; --border: #e5e7eb; --nav: #ffffff;
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
         
-        /* Header */
-        .header { text-align: center; padding: 20px; border-bottom: 1px solid var(--border); background: var(--card); sticky; top: 0; z-index: 100; }
-        .logo-box { width: 60px; height: 60px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); }
-        .aura-status { font-size: 11px; margin-top: 10px; color: var(--sky); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Panels */
-        .panel { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
+        .header { text-align: center; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); sticky; top: 0; z-index: 100; }
+        .logo-box { width: 50px; height: 50px; margin: 0 auto; filter: drop-shadow(0 0 8px var(--gold)); }
+        
+        .panel { display: none; padding: 15px; animation: slideUp 0.4s ease; }
         .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dashboard Cards */
-        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: relative; }
-        .card h3 { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; }
-        .card .val { font-size: 22px; font-weight: 800; margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+        .card { background: var(--card); border-radius: 18px; padding: 15px; border: 1px solid var(--border); margin-bottom: 12px; }
         
-        /* Inputs & Buttons */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 12px; font-size: 14px; }
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: 800; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-gold { background: var(--gold); color: #000; }
-        .btn-sky { background: var(--sky); color: #000; }
+        /* Mola Butonları & UI */
+        .staff-card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; border-left: 5px solid var(--gold); }
+        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+        .m-btn { padding: 8px; border: none; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; color: #000; }
+        .b-yemek { background: var(--gold); }
+        .b-mola { background: var(--sky); }
+        .b-sigara { background: var(--green); }
+        .b-stop { background: var(--red); color: white; grid-column: span 2; }
+        
+        .timer-display { font-family: monospace; font-size: 18px; color: var(--sky); font-weight: bold; margin-top: 5px; }
 
-        /* Mola System UI */
-        .staff-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg); border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
-        .status-dot.busy { background: var(--red); box-shadow: 0 0 8px var(--red); }
+        /* Log Sistemi */
+        .log-container { font-size: 11px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; height: 200px; overflow-y: auto; border: 1px solid var(--border); }
+        .log-entry { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #333; }
+        .log-time { color: var(--gold); margin-right: 5px; }
 
-        /* Bottom Nav */
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); display: flex; overflow-x: auto; padding: 10px 5px; border-top: 1px solid var(--border); z-index: 1000; scrollbar-width: none; }
-        .nav-item { min-width: 80px; text-align: center; color: #6b7280; font-size: 10px; cursor: pointer; }
+        .nav-item { min-width: 75px; text-align: center; color: #6b7280; font-size: 10px; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
-        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; font-style: normal; }
+        .nav-item i { display: block; font-size: 18px; margin-bottom: 4px; font-style: normal; }
 
-        /* Utility */
-        .badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div class="logo-box">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8" />
-                <path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="4" fill="none" />
-                <path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="var(--gold)" />
-            </svg>
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="var(--gold)" opacity="0.8" /><path d="M10 75 Q50 60 90 75" stroke="var(--sky)" stroke-width="4" fill="none" /><path d="M30 70 L30 50 L38 50 L38 45 L46 45 L46 50 L54 50 L54 45 L62 45 L62 50 L70 50 L70 70 Z" fill="var(--gold)" /></svg>
         </div>
-        <h1 id="top-title" style="margin: 5px 0; font-size: 20px; letter-spacing: 2px;">NO:48 EMPEROR</h1>
-        <div class="aura-status" id="aura-chat">AURA: Sistem Online. Hoş geldin Hasan.</div>
+        <div id="aura-status" style="font-size:11px; color:var(--sky); font-weight:bold; margin-top:5px;">AURA: Komuta Merkezi Hazır</div>
     </header>
 
     <div id="p-dash" class="panel active">
-        <div class="grid">
-            <div class="card">
-                <h3>Durum</h3>
-                <div class="val" id="dash-time">00:00</div>
-            </div>
-            <div class="card">
-                <h3>Bütçe</h3>
-                <div class="val" id="dash-balance">0 ₺</div>
-            </div>
-            <div class="card">
-                <h3>Mola</h3>
-                <div class="val"><span id="dash-mola">0</span><span style="font-size:12px; color:#6b7280">/13 Ekip</span></div>
-            </div>
-            <div class="card">
-                <h3>Hava</h3>
-                <div class="val">18°C <span class="badge">Marmaris</span></div>
-            </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="card"><h3>Kalan</h3><div id="d-bal" style="font-size:18px; font-weight:800;">0 ₺</div></div>
+            <div class="card"><h3>Molada</h3><div id="d-mola" style="font-size:18px; font-weight:800;">0</div></div>
         </div>
-        <div class="card" style="margin-top:10px;">
-            <h3>AURA Analizi</h3>
-            <p id="aura-long-msg" style="font-size:13px; line-height:1.5;">Harcamaların stabil, ekip sahada. Marmaris bugün sakin görünüyor.</p>
+        <div class="card">
+            <h3>Son Hareketler (Logs)</h3>
+            <div id="dash-logs" class="log-container" style="height:150px;"></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Mağaza Operasyon</h2>
-        <div id="staff-list"></div>
+        <h2 style="color:var(--gold)">💼 Mağaza Komuta</h2>
+        <div id="staff-container"></div>
     </div>
 
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div id="begum-list"></div>
-        <input type="text" id="begum-in" placeholder="Önemli bir not yaz...">
-        <button class="btn btn-sky" onclick="addGeneral('begum', 'begum-in')">Notu Kaydet</button>
+        <input type="text" id="b-in" placeholder="Yeni not...">
+        <button onclick="addGen('begum','b-in')" style="width:100%; padding:15px; background:var(--sky); border:none; border-radius:12px; font-weight:bold;">Kaydet</button>
     </div>
 
-    <div id="p-bank" class="panel">
-        <h2 style="color:var(--green)">💰 Finans & Giderler</h2>
-        <div class="card">
-            <h3>Net Bakiye</h3>
-            <div class="val" id="bank-total" style="font-size:28px;">0 ₺</div>
-        </div>
-        <div id="expense-list"></div>
-        <div class="card">
-            <h3>Gider Girişi</h3>
-            <input type="text" id="exp-name" placeholder="Harcama Türü">
-            <input type="number" id="exp-amt" placeholder="Tutar (₺)">
-            <button class="btn btn-gold" onclick="addExpense()">Gideri İşle</button>
-        </div>
-    </div>
-
-    <div id="p-odds" class="panel">
-        <h2 style="color:var(--red)">⚽ Canlı Skorlar</h2>
-        <iframe src="https://m.flashscore.com.tr/" style="width:100%; height:500px; border-radius:20px; border:none; background:#fff;"></iframe>
+    <div id="p-logs" class="panel">
+        <h2 style="color:var(--gold)">📜 İşlem Geçmişi</h2>
+        <div id="full-logs" class="log-container" style="height:500px;"></div>
+        <button onclick="clearLogs()" style="width:100%; margin-top:10px; background:red; color:white; border:none; padding:10px; border-radius:10px;">Tarihi Sil</button>
     </div>
 
     <div id="p-god" class="panel">
-        <h2 style="color:var(--gold)">⚡ İmparator Modu</h2>
+        <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
-            <h3>Sistem Ayarları</h3>
-            <button class="btn" style="background:#333; color:white; margin-bottom:10px;" onclick="toggleTheme()">🌓 Temayı Değiştir</button>
-            <input type="text" id="set-name" placeholder="Uygulama Adı">
-            <input type="number" id="set-salary" placeholder="Aylık Maaş">
-            <button class="btn btn-gold" onclick="updateSettings()">Sistemi Güncelle</button>
+            <input type="text" id="s-name" placeholder="Sistem Adı">
+            <input type="number" id="s-sal" placeholder="Maaş">
+            <button onclick="setGod()" style="width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px;">Güncelle</button>
         </div>
         <div class="card">
-            <h3>Ekibi Yönet</h3>
-            <input type="text" id="new-staff" placeholder="Personel İsmi">
-            <button class="btn btn-sky" onclick="addStaff()">Personel Yarat</button>
+            <input type="text" id="ns-name" placeholder="Yeni Personel">
+            <button onclick="addSt()" style="width:100%; padding:10px; background:var(--sky); border:none; border-radius:10px;">Ekle</button>
         </div>
-        <button class="btn" style="background:var(--red); color:white; margin-top:20px;" onclick="wipeSystem()">⚠️ TÜM SİSTEMİ SIFIRLA</button>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active" onclick="nav('p-dash', this)"><i>🏠</i>Dash</div>
-        <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Mola</div>
+        <div class="nav-item" onclick="nav('p-store', this)"><i>💼</i>Store</div>
         <div class="nav-item" onclick="nav('p-begum', this)"><i>💎</i>Begüm</div>
-        <div class="nav-item" onclick="nav('p-odds', this)"><i>⚽</i>Stadium</div>
-        <div class="nav-item" onclick="nav('p-bank', this)"><i>💰</i>Finans</div>
+        <div class="nav-item" onclick="nav('p-logs', this)"><i>📜</i>Log</div>
         <div class="nav-item" onclick="nav('p-god', this)"><i>⚡</i>Tanrı</div>
     </nav>
 
     <script>
         const DB_KEY = 'NO48_FINAL_SYSTEM';
         let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            name: "NO:48", salary: 52000, staff: [], begum: [], expenses: [], theme: 'dark'
+            name: "NO:48", salary: 52000, staff: [], begum: [], expenses: [], logs: []
         };
 
-        function save() { 
-            localStorage.setItem(DB_KEY, JSON.stringify(db)); 
-            render(); 
-        }
-
+        function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); render(); }
         function nav(id, el) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
 
-        function toggleTheme() {
-            db.theme = db.theme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', db.theme);
+        function addLog(msg) {
+            const time = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            db.logs.unshift({time, msg});
+            if(db.logs.length > 100) db.logs.pop();
             save();
         }
 
-        function updateSettings() {
-            db.name = document.getElementById('set-name').value || db.name;
-            db.salary = Number(document.getElementById('set-salary').value) || db.salary;
-            save();
-            alert("İmparatorun emirleri işlendi.");
+        function startMola(i, type, dur) {
+            let s = db.staff[i];
+            if(s.activeMola) return alert("Zaten molada!");
+            s.activeMola = { type, start: Date.now(), dur: dur * 60 * 1000 };
+            addLog(`${s.name} - ${type} Başladı`);
         }
 
-        function addStaff() {
-            let n = document.getElementById('new-staff').value;
-            if(n) { db.staff.push({name: n, mola: false}); save(); document.getElementById('new-staff').value=''; }
+        function stopMola(i) {
+            let s = db.staff[i];
+            if(!s.activeMola) return;
+            addLog(`${s.name} - ${s.activeMola.type} BİTTİ`);
+            s.activeMola = null;
         }
-
-        function addExpense() {
-            let n = document.getElementById('exp-name').value;
-            let a = Number(document.getElementById('exp-amt').value);
-            if(n && a) {
-                db.expenses.push({name: n, amt: a, date: new Date().toLocaleDateString('tr-TR')});
-                save();
-                document.getElementById('exp-name').value = '';
-                document.getElementById('exp-amt').value = '';
-            } else {
-                alert("Lütfen harcama adı ve tutarı girin!");
-            }
-        }
-
-        function addGeneral(key, inputId) {
-            let val = document.getElementById(inputId).value;
-            if(val) { db[key].push(val); save(); document.getElementById(inputId).value=''; }
-        }
-
-        function toggleMola(i) { db.staff[i].mola = !db.staff[i].mola; save(); }
-        function remove(key, i) { db[key].splice(i, 1); save(); }
-        function wipeSystem() { if(confirm("Tüm veriler (ekip, bütçe, notlar) silinecek. Emin misin?")) { localStorage.clear(); location.reload(); } }
 
         function render() {
-            document.documentElement.setAttribute('data-theme', db.theme);
-            document.getElementById('top-title').innerText = db.name;
-            
-            // Finans Hesaplama
+            // Dash Finans
             let totalExp = db.expenses.reduce((s, e) => s + e.amt, 0);
-            let bal = db.salary - totalExp;
-            document.getElementById('dash-balance').innerText = bal.toLocaleString() + " ₺";
-            document.getElementById('bank-total').innerText = bal.toLocaleString() + " ₺";
+            document.getElementById('d-bal').innerText = (db.salary - totalExp).toLocaleString() + " ₺";
 
-            // Dashboard Mola
-            let onMola = db.staff.filter(s => s.mola).length;
-            document.getElementById('dash-mola').innerText = onMola;
+            // Staff & Timers
+            const now = Date.now();
+            let moladakiler = 0;
+            document.getElementById('staff-container').innerHTML = db.staff.map((s, i) => {
+                let timerHtml = '';
+                if(s.activeMola) {
+                    moladakiler++;
+                    let diff = now - s.activeMola.start;
+                    let display = "";
+                    if(s.activeMola.dur > 0) { // Countdown
+                        let rem = s.activeMola.dur - diff;
+                        if(rem < 0) { display = "SÜRE DOLDU!"; }
+                        else {
+                            let m = Math.floor(rem / 60000);
+                            let sec = Math.floor((rem % 60000) / 1000);
+                            display = `Kalan: ${m}:${sec < 10 ? '0' : ''}${sec}`;
+                        }
+                    } else { // Stopwatch
+                        let m = Math.floor(diff / 60000);
+                        let sec = Math.floor((diff % 60000) / 1000);
+                        display = `Geçen: ${m}:${sec < 10 ? '0' : ''}${sec}`;
+                    }
+                    timerHtml = `<div class="timer-display">${s.activeMola.type}: ${display}</div>`;
+                }
 
-            // Listeler
-            document.getElementById('staff-list').innerHTML = db.staff.map((s, i) => `
-                <div class="staff-row">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div class="status-dot ${s.mola?'busy':''}"></div>
-                        <span>${s.name}</span>
+                return `
+                <div class="staff-card">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>${s.name}</b>
+                        <span onclick="removeSt(${i})" style="color:red; font-size:10px;">KALDIR</span>
                     </div>
-                    <button class="btn ${s.mola?'btn-gold':'btn-sky'}" style="width:auto; padding:8px 15px; font-size:11px;" onclick="toggleMola(${i})">
-                        ${s.mola?'MOLADA':'MOLA VER'}
-                    </button>
-                </div>
-            `).join('');
-
-            document.getElementById('begum-list').innerHTML = db.begum.map((n, i) => `
-                <div class="staff-row" style="border-color:var(--sky)"><span>${n}</span><span onclick="remove('begum',${i})">✓</span></div>
-            `).join('');
-
-            document.getElementById('expense-list').innerHTML = db.expenses.map((e, i) => `
-                <div class="staff-row" style="border-left:4px solid var(--red)">
-                    <div><b>${e.name}</b><br><small style="color:#6b7280">${e.date}</small></div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span>-${e.amt.toLocaleString()} ₺</span>
-                        <span onclick="remove('expenses',${i})" style="color:var(--red); font-weight:bold;">×</span>
+                    ${timerHtml}
+                    <div class="btn-group">
+                        <button class="m-btn b-yemek" onclick="startMola(${i},'Yemek',60)">YEMEK</button>
+                        <button class="m-btn b-mola" onclick="startMola(${i},'1. MOLA',30)">1. MOLA</button>
+                        <button class="m-btn b-mola" onclick="startMola(${i},'2. MOLA',30)">2. MOLA</button>
+                        <button class="m-btn b-sigara" onclick="startMola(${i},'Sigara/Kahve',0)">SİGARA</button>
+                        ${s.activeMola ? `<button class="m-btn b-stop" onclick="stopMola(${i})">MOLAYI BİTİR</button>` : ''}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
-            // AURA
-            let aura = document.getElementById('aura-chat');
-            if(bal < 5000) aura.innerText = "AURA: Hasan bütçe çok azaldı, acil tasarruf!";
-            else if(onMola > 3) aura.innerText = "AURA: Mağaza karışabilir, 4 kişi molada!";
-            else aura.innerText = "AURA: Her şey yolunda İmparator.";
+            document.getElementById('d-mola').innerText = moladakiler;
+
+            // Logs
+            let logHtml = db.logs.map(l => `<div class="log-entry"><span class="log-time">${l.time}</span> ${l.msg}</div>`).join('');
+            document.getElementById('dash-logs').innerHTML = logHtml;
+            document.getElementById('full-logs').innerHTML = logHtml;
+
+            // Begüm
+            document.getElementById('begum-list').innerHTML = db.begum.map((n, i) => `<div class="card" style="padding:10px; border-left:3px solid var(--sky)">${n} <span onclick="remove('begum',${i})" style="float:right">✓</span></div>`).join('');
         }
 
-        setInterval(() => {
-            document.getElementById('dash-time').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-        }, 1000);
+        // Helpers
+        function setGod() { db.name = document.getElementById('s-name').value || db.name; db.salary = Number(document.getElementById('s-sal').value) || db.salary; save(); }
+        function addSt() { let n = document.getElementById('ns-name').value; if(n){db.staff.push({name:n, activeMola:null}); save(); document.getElementById('ns-name').value='';} }
+        function removeSt(i) { if(confirm("Personeli sil?")) { db.staff.splice(i, 1); save(); } }
+        function remove(k, i) { db[k].splice(i, 1); save(); }
+        function addGen(k, id) { let v = document.getElementById(id).value; if(v){db[k].push(v); save(); document.getElementById(id).value='';} }
+        function clearLogs() { if(confirm("Tüm geçmiş silinecek?")) { db.logs = []; save(); } }
 
+        setInterval(render, 1000); // Saniyelik sayaç güncelleme
         render();
     </script>
 </body>
