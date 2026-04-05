@@ -4,11 +4,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.querySelector('.chat-container');
 
     const API_KEY = 'AIzaSyBywifUfLoqVU5eAakr5cnzCNtqrCyNDhw'; 
+    let activeModel = null; // H&B bulduğu modeli buraya kaydedecek
 
     sendBtn.addEventListener('click', sendMessage);
     inputBox.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') sendMessage();
     });
+
+    // Google'a sorup çalışan modeli bulan fonksiyon
+    async function getValidModel() {
+        if (activeModel) return activeModel; // Zaten bulduysa tekrar arama
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
+            const data = await res.json();
+            if (data.models) {
+                // Sohbet edebilen (generateContent) ilk Gemini modelini bul
+                const model = data.models.find(m => m.name.includes('gemini') && m.supportedGenerationMethods.includes('generateContent'));
+                if (model) {
+                    activeModel = model.name;
+                    return activeModel;
+                }
+            }
+            return 'models/gemini-1.5-flash'; // Bulamazsa varsayılanı dene
+        } catch(e) {
+            return 'models/gemini-1.5-flash';
+        }
+    }
 
     async function sendMessage() {
         const text = inputBox.value.trim();
@@ -17,11 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage(text, 'user');
         inputBox.value = '';
 
-        const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
+        const loadingMsg = appendMessage("H&B beynini tarıyor ve düşünüyor... 🐾", 'assistant');
 
         try {
-            // DİKKAT: Buradaki modeli gemini-pro olarak değiştirdik!
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+            const modelName = await getValidModel(); // Çalışan modeli al
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
@@ -32,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(data.candidates && data.candidates.length > 0) {
                 loadingMsg.textContent = data.candidates[0].content.parts[0].text;
             } else if (data.error) {
-                loadingMsg.textContent = "Sistem Hatası: " + data.error.message;
+                loadingMsg.textContent = "Sistem Hatası (" + modelName + "): " + data.error.message;
             } else {
                 loadingMsg.textContent = "Sanırım beynimde bir kısa devre oldu, tekrar dener misin?";
             }
