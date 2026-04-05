@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NO:48 | THE BEAST v3.0</title>
+    <title>NO:48 | THE BEAST v4.0</title>
     <style>
         :root { --bg: #05070a; --card: #10141d; --gold: #d4af37; --sky: #00d2ff; --text: #ffffff; --red: #ff4d4d; --green: #4ade80; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,11 +20,14 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid #1f2937; position: relative; }
         .card h3 { margin: 0; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
-        .val { font-size: 22px; font-weight: 800; margin-top: 8px; }
+        .val { font-size: 20px; font-weight: 800; margin-top: 8px; }
 
         .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #161e2d; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
         .mola-btn { background: var(--green); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; }
         .mola-active { background: var(--red) !important; color: white !important; }
+
+        /* Canlı Skor Alanı */
+        #livescore-container { border-radius: 20px; overflow: hidden; border: 1px solid #1f2937; height: 500px; }
 
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070a10; display: flex; overflow-x: auto; padding: 15px 5px; border-top: 1px solid #1f2937; z-index: 1000; scrollbar-width: none; }
         .nav-item { min-width: 75px; text-align: center; color: #444; font-size: 10px; cursor: pointer; transition: 0.3s; }
@@ -45,71 +48,64 @@
             <circle cx="50" cy="62" r="6" fill="white" />
         </svg>
         <h1 id="main-title" style="color:var(--gold); margin:5px 0; letter-spacing: 3px;">NO:48</h1>
-        <div class="aura-box" id="aura-chat">AURA: Hasan, kurlar çekiliyor, ekip hazır bekliyor.</div>
+        <div class="aura-box" id="aura-chat">AURA: Maçlar canlı olarak takip ediliyor, skorları kaçırmayalım!</div>
     </div>
 
     <div id="p-dash" class="panel active">
         <div class="grid">
             <div class="card"><h3>Saat</h3><div class="val" id="clock">00:00</div></div>
-            <div class="card" style="border-color:var(--green)"><h3>Canlı Kur</h3><div class="val" style="font-size:16px;">GBP: <span id="gbp-val">41.20</span>₺</div></div>
+            <div class="card" style="border-color:var(--red)"><h3>Canlı Skor</h3><div class="val" style="font-size:14px;">Maçları İzle →</div></div>
             <div class="card" style="border-color:var(--sky)"><h3>Ekip Molada</h3><div class="val"><span id="active-mola-count">0</span> / <span id="total-staff-count">0</span></div></div>
-            <div class="card"><h3>Kalan Bütçe</h3><div class="val" id="salary-view" style="font-size:18px;">0 ₺</div></div>
+            <div class="card"><h3>Kalan Maaş</h3><div class="val" id="salary-view" style="font-size:18px;">52,000 ₺</div></div>
         </div>
     </div>
 
     <div id="p-store" class="panel">
-        <h2 style="color:var(--gold)">💼 Mola Takip Sistemi</h2>
+        <h2 style="color:var(--gold)">💼 Mola Takip</h2>
         <div id="staff-container"></div>
+    </div>
+
+    <div id="p-odds" class="panel">
+        <h2 style="color:var(--red)">⚽ Stadium: Canlı Skorlar</h2>
+        <div id="livescore-container">
+            <iframe id="livescore-iframe" src="https://www.livescore.bz/webmasters/external/v2/livescore?timezone=Europe/Istanbul&show_logos=1&events=1&odds=1" width="100%" height="100%" frameborder="0" style="border-radius:15px;"></iframe>
+        </div>
     </div>
 
     <div id="p-begum" class="panel">
         <h2 style="color:var(--sky)">💎 VIP Begüm</h2>
         <div class="card" id="begum-list"></div>
-        <input type="text" id="begum-note" placeholder="Ona bir not bırak...">
-        <button class="btn" style="background:var(--gold)" onclick="addBegumNote()">Notu İşle</button>
-    </div>
-
-    <div id="p-banker" class="panel">
-        <h2 style="color:var(--green)">💰 Finans & Kurlar</h2>
-        <div class="card">
-            <h3>Döviz Masası</h3>
-            <div style="font-size:14px; margin-top:10px;">
-                <p>🇺🇸 USD: <span id="usd-val">32.45</span> ₺</p>
-                <p>🇪🇺 EUR: <span id="eur-val">35.12</span> ₺</p>
-                <p>🇬🇧 GBP: <span id="gbp-val-full">41.25</span> ₺</p>
-            </div>
-        </div>
+        <input type="text" id="begum-note" placeholder="Notunu yaz...">
+        <button class="btn" style="background:var(--gold)" onclick="addBegumNote()">Kaydet</button>
     </div>
 
     <div id="p-god" class="panel">
         <h2 style="color:var(--gold)">⚡ Tanrı Modu</h2>
         <div class="card">
             <input type="text" id="god-appname" placeholder="Sistem Adı">
-            <input type="number" id="god-salary" placeholder="Maaş Miktarı">
-            <button class="btn" style="background:var(--gold)" onclick="updateGod()">Sistemi Güncelle</button>
+            <input type="number" id="god-salary" placeholder="Maaş Girişi">
+            <button class="btn" style="background:var(--gold)" onclick="updateGod()">Güncelle</button>
         </div>
         <div class="card">
-            <input type="text" id="god-staff" placeholder="Yeni Personel İsmi">
-            <button class="btn" style="background:var(--sky)" onclick="addStaff()">Varlığı Yarat</button>
+            <input type="text" id="god-staff" placeholder="Personel İsmi">
+            <button class="btn" style="background:var(--sky)" onclick="addStaff()">Ekibe Kat</button>
         </div>
-        <button class="btn" style="background:var(--red); color:white; margin-top:10px;" onclick="resetSystem()">Kıyameti Kopar (Sıfırla)</button>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active" onclick="nav('p-dash', this)"><span>🏠</span>Dash</div>
         <div class="nav-item" onclick="nav('p-store', this)"><span>💼</span>Mola</div>
         <div class="nav-item" onclick="nav('p-begum', this)"><span>💎</span>Begüm</div>
-        <div class="nav-item" onclick="nav('p-odds', this)"><span>⚽</span>Odds</div>
-        <div class="nav-item" onclick="nav('p-banker', this)"><span>💰</span>Bank</div>
+        <div class="nav-item" onclick="nav('p-odds', this)"><span>⚽</span>Stadium</div>
         <div class="nav-item" onclick="nav('p-god', this)"><span>⚡</span>Tanrı</div>
     </nav>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('no48_v3')) || {
-            name: "NO:48", salary: 52000, staff: [], begum: [], molaActive: {}
+        let db = JSON.parse(localStorage.getItem('no48_v4')) || {
+            name: "NO:48", salary: 52000, staff: [], begum: []
         };
 
-        function save() { localStorage.setItem('no48_v3', JSON.stringify(db)); render(); }
+        function save() { localStorage.setItem('no48_v4', JSON.stringify(db)); render(); }
 
         function nav(id, el) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -121,22 +117,16 @@
         function updateGod() {
             db.name = document.getElementById('god-appname').value || db.name;
             db.salary = document.getElementById('god-salary').value || db.salary;
-            save(); alert("Evren güncellendi.");
+            save(); alert("Sistem emirleri alındı.");
         }
 
         function addStaff() {
             let n = document.getElementById('god-staff').value;
-            if(n) { db.staff.push({name: n, mola: false, time: 0}); save(); document.getElementById('god-staff').value=''; }
+            if(n) { db.staff.push({name: n, mola: false}); save(); document.getElementById('god-staff').value=''; }
         }
 
         function toggleMola(index) {
-            let s = db.staff[index];
-            if(!s.mola) {
-                s.mola = true;
-                s.startTime = Date.now();
-            } else {
-                s.mola = false;
-            }
+            db.staff[index].mola = !db.staff[index].mola;
             save();
         }
 
@@ -153,38 +143,22 @@
             let molaCount = db.staff.filter(s => s.mola).length;
             document.getElementById('active-mola-count').innerText = molaCount;
 
-            // Mola Listesi
             const container = document.getElementById('staff-container');
-            container.innerHTML = db.staff.map((s, i) => {
-                let molaText = s.mola ? "MOLADA" : "MOLA BAŞLAT";
-                return `<div class="item-row">
-                    <span>${s.name}</span>
-                    <button class="mola-btn ${s.mola ? 'mola-active' : ''}" onclick="toggleMola(${i})">${molaText}</button>
-                </div>`;
-            }).join('');
+            container.innerHTML = db.staff.map((s, i) => `<div class="item-row"><span>${s.name}</span><button class="mola-btn ${s.mola ? 'mola-active' : ''}" onclick="toggleMola(${i})">${s.mola ? 'MOLADA' : 'MOLA BAŞLAT'}</button></div>`).join('');
 
-            // Begüm Notları
             document.getElementById('begum-list').innerHTML = db.begum.map((n, i) => `<div class="item-row" style="border-color:var(--sky)"><span>${n}</span><span onclick="removeBegum(${i})">✓</span></div>`).join('');
             
-            // AURA Zekası
-            if(molaCount >= 3) {
-                document.getElementById('aura-chat').innerText = "AURA: Hasan, mola sayısı 3'ü geçti! Mağaza sahası zayıflıyor, kontrol et.";
-            } else {
-                document.getElementById('aura-chat').innerText = "AURA: Ekip dengeli çalışıyor. Marmaris bugün sakin ama Sterlin takibimde.";
+            // AURA Maç Yorumu
+            if(molaCount == 0) {
+                document.getElementById('aura-chat').innerText = "AURA: Hasan, ekip tam kadro sahada! Sen de rahatça maçları takip edebilirsin.";
             }
         }
 
         function removeBegum(i) { db.begum.splice(i, 1); save(); }
-        function resetSystem() { if(confirm("Tüm dünyayı sıfırlamak istiyor musun?")) { localStorage.clear(); location.reload(); } }
 
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
         }, 1000);
-
-        // Kurları Simüle Et (Gerçek API için bir sonraki adımda anahtar ekleyeceğiz)
-        setInterval(() => {
-            document.getElementById('gbp-val').innerText = (41 + Math.random()).toFixed(2);
-        }, 5000);
 
         render();
     </script>
