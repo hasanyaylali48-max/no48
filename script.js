@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputBox = document.querySelector('.input-box');
     const chatContainer = document.querySelector('.chat-container');
 
-    const API_KEY = 'AIzaSyBywifUfLoqVU5eAakr5cnzCNtqrCyNDhw'; 
+    // YENİ API ANAHTARIN BURAYA EKLENDİ
+    const API_KEY = 'AIzaSyAORRPdeXV_Ie5VjVFdwgJyPxLU9J47pWA'; 
 
     sendBtn.addEventListener('click', sendMessage);
     inputBox.addEventListener('keypress', function(e) {
@@ -20,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
 
         try {
-            // En güncel ve stabil model olan gemini-1.5-flash'ı kullanıyoruz
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
