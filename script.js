@@ -3,35 +3,65 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputBox = document.querySelector('.input-box');
     const chatContainer = document.querySelector('.chat-container');
 
-    // Gönder butonuna basıldığında veya Enter'a basıldığında çalışır
+    // API Anahtarın buraya eklendi
+    const API_KEY = 'AIzaSyBywifUfLoqVU5eAakr5cnzCNtqrCyNDhw'; 
+
     sendBtn.addEventListener('click', sendMessage);
     inputBox.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') sendMessage();
     });
 
-    function sendMessage() {
+    async function sendMessage() {
         const text = inputBox.value.trim();
         if (text === '') return;
 
-        // Senin mesajını ekranda sağa yaslı ve siyah gösterelim
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message';
-        userMsg.style.backgroundColor = '#111111';
-        userMsg.style.color = '#ffffff';
-        userMsg.style.marginLeft = 'auto'; // Sağa yaslamak için
-        userMsg.textContent = text;
-        
-        chatContainer.appendChild(userMsg);
-        inputBox.value = ''; // Kutuyu temizle
-        chatContainer.scrollTop = chatContainer.scrollHeight; // En alta kaydır
+        // Senin mesajını ekrana ekle
+        appendMessage(text, 'user');
+        inputBox.value = '';
 
-        // H&B'nin gecikmeli cevabı
-        setTimeout(() => {
-            const botMsg = document.createElement('div');
-            botMsg.className = 'message assistant';
-            botMsg.textContent = "Şu an sadece arayüzümü test ediyoruz, henüz beynim kodlanmadı ama yakında harika şeyler yapacağız! 🐾";
-            chatContainer.appendChild(botMsg);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }, 1000); // 1 saniye bekleyip cevap verir
+        // H&B düşünürken görünecek geçici mesaj
+        const loadingMsg = appendMessage("H&B düşünüyor... 🐾", 'assistant');
+
+        try {
+            // Gemini Yapay Zeka API'sine bağlanıyoruz
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: text }] }]
+                })
+            });
+
+            const data = await response.json();
+            
+            // Yapay zekadan gelen cevabı ekrana yazdır
+            if(data.candidates && data.candidates.length > 0) {
+                const botReply = data.candidates[0].content.parts[0].text;
+                loadingMsg.textContent = botReply;
+            } else {
+                loadingMsg.textContent = "Sanırım beynimde bir kısa devre oldu, tekrar dener misin?";
+            }
+
+        } catch (error) {
+            loadingMsg.textContent = "İnternet bağlantımda bir sorun var sanırım! 🙀";
+        }
+    }
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = sender === 'user' ? 'message' : 'message assistant';
+        
+        if (sender === 'user') {
+            msgDiv.style.backgroundColor = '#111111';
+            msgDiv.style.color = '#ffffff';
+            msgDiv.style.marginLeft = 'auto';
+        }
+
+        msgDiv.textContent = text;
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        return msgDiv; 
     }
 });
